@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { SearchIcon, SortIcon } from "../../components/Icons";
 import SortModal from "./SortModal";
+import UserList from "./UserList";
+import { User } from "../../types";
 
 interface SearchWrapperProps {
   $isLoading: boolean;
@@ -50,8 +52,8 @@ const SortButton = styled.button`
 
 interface SearchInputProps {
   isLoading: boolean;
-  onSortChange: (type: "alphabet" | "birthday") => void;
-  sortType: "alphabet" | "birthday";
+  onSortChange: (type: "alphabet" | "birthday" | null) => void;
+  sortType: "alphabet" | "birthday" | null;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({

@@ -19,4 +19,5 @@ export interface User {
   lastName: string;
   userTag: string;
   department: string;
+  birthday: string;
 }

@@ -25,7 +25,9 @@ const Search: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sortType, setSortType] = useState<"alphabet" | "birthday">("alphabet");
+  const [sortType, setSortType] = useState<"alphabet" | "birthday" | null>(
+    null
+  );
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -56,9 +58,8 @@ const Search: React.FC = () => {
     fetchUsers();
   }, []);
 
-  const handleSortChange = (type: "alphabet" | "birthday") => {
+  const handleSortChange = (type: "alphabet" | "birthday" | null) => {
     setSortType(type);
-    // Здесь можно добавить логику сортировки пользователей
   };
 
   return (
@@ -76,7 +77,7 @@ const Search: React.FC = () => {
         ) : error ? (
           <UserListError onRetry={fetchUsers} />
         ) : (
-          <UserList users={users} />
+          <UserList users={users} sortType={sortType} />
         )}
       </ContentWrapper>
     </SearchContainer>

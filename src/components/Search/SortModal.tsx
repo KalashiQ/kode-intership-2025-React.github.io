@@ -82,8 +82,8 @@ const OptionText = styled.span`
 interface SortModalProps {
   isOpen: boolean;
   onClose: () => void;
-  sortType: "alphabet" | "birthday";
-  onSortChange: (type: "alphabet" | "birthday") => void;
+  sortType: "alphabet" | "birthday" | null;
+  onSortChange: (type: "alphabet" | "birthday" | null) => void;
 }
 
 const SortModal: React.FC<SortModalProps> = ({
@@ -106,10 +106,13 @@ const SortModal: React.FC<SortModalProps> = ({
         <div>
           <SortOption>
             <HiddenRadio
-              type="radio"
+              type="checkbox"
               name="sort"
               checked={sortType === "alphabet"}
-              onChange={() => onSortChange("alphabet")}
+              onChange={() => {
+                onSortChange(sortType === "alphabet" ? null : "alphabet");
+                onClose();
+              }}
             />
             <RadioIcon
               src={sortType === "alphabet" ? selectedIcon : unselectedIcon}
@@ -119,10 +122,13 @@ const SortModal: React.FC<SortModalProps> = ({
           </SortOption>
           <SortOption>
             <HiddenRadio
-              type="radio"
+              type="checkbox"
               name="sort"
               checked={sortType === "birthday"}
-              onChange={() => onSortChange("birthday")}
+              onChange={() => {
+                onSortChange(sortType === "birthday" ? null : "birthday");
+                onClose();
+              }}
             />
             <RadioIcon
               src={sortType === "birthday" ? selectedIcon : unselectedIcon}

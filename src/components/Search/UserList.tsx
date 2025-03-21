@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { User } from "../../types";
+import { sortUsersByAlphabet, sortUsersByBirthday } from "../../utils/sorting";
 
 const ListContainer = styled.div`
   margin-top: -1px;
@@ -59,12 +60,22 @@ const Department = styled.span`
 
 interface UserListProps {
   users: User[];
+  sortType: "alphabet" | "birthday" | null;
 }
 
-const UserList: React.FC<UserListProps> = ({ users }) => {
+const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
+  const sortedUsers = useMemo(() => {
+    if (!sortType) return users;
+    if (sortType === "alphabet") {
+      return sortUsersByAlphabet(users);
+    } else {
+      return sortUsersByBirthday(users);
+    }
+  }, [users, sortType]);
+
   return (
     <ListContainer>
-      {users.map((user) => (
+      {sortedUsers.map((user) => (
         <UserItem key={user.id}>
           <Avatar
             src={user.avatarUrl}
