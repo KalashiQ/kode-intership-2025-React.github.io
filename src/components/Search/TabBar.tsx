@@ -62,13 +62,20 @@ interface TabBarProps {
 }
 
 const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange }) => {
-  const tabs: { id: TabType; label: string }[] = [
-    { id: "all", label: "Все" },
-    { id: "design", label: "Designers" },
-    { id: "backend", label: "Analysts" },
-    { id: "management", label: "Managers" },
-    { id: "ios", label: "iOS" },
-    { id: "android", label: "Android" },
+  const tabs: { id: TabType; label: string; apiValue: string }[] = [
+    { id: "all", label: "Все", apiValue: "all" },
+    { id: "design", label: "Дизайн", apiValue: "design" },
+    { id: "analytics", label: "Аналитика", apiValue: "analytics" },
+    { id: "management", label: "Менеджмент", apiValue: "management" },
+    { id: "ios", label: "iOS", apiValue: "ios" },
+    { id: "android", label: "Android", apiValue: "android" },
+    { id: "frontend", label: "Frontend", apiValue: "frontend" },
+    { id: "backend", label: "Backend", apiValue: "backend" },
+    { id: "support", label: "Техподдержка", apiValue: "support" },
+    { id: "qa", label: "QA", apiValue: "qa" },
+    { id: "back_office", label: "Бэк-офис", apiValue: "back_office" },
+    { id: "hr", label: "HR", apiValue: "hr" },
+    { id: "pr", label: "PR", apiValue: "pr" },
   ];
 
   return (
@@ -76,6 +83,7 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange }) => {
       <TabsWrapper>
         {tabs.map((tab) => (
           <Tab
+            key={tab.id}
             active={activeTab === tab.id}
             onClick={() => onTabChange(tab.id)}
           >
