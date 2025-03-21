@@ -10,7 +10,8 @@ export type TabType =
   | "hr"
   | "pr"
   | "backend"
-  | "support";
+  | "support"
+  | "analytics";
 
 export interface User {
   id: string;

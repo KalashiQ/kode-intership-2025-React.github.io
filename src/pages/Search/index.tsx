@@ -29,11 +29,11 @@ const Search: React.FC = () => {
     null
   );
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (department: TabType = "all") => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        "https://stoplight.io/mocks/kode-frontend-team/koder-stoplight/86566464/users?__example=all",
+        `https://stoplight.io/mocks/kode-frontend-team/koder-stoplight/86566464/users?__example=${department}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -55,11 +55,15 @@ const Search: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    fetchUsers(activeTab);
+  }, [activeTab]);
 
   const handleSortChange = (type: "alphabet" | "birthday" | null) => {
     setSortType(type);
+  };
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
   };
 
   return (
@@ -71,11 +75,11 @@ const Search: React.FC = () => {
           sortType={sortType}
           onSortChange={handleSortChange}
         />
-        <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+        <TabBar activeTab={activeTab} onTabChange={handleTabChange} />
         {isLoading ? (
           <UserListSkeleton />
         ) : error ? (
-          <UserListError onRetry={fetchUsers} />
+          <UserListError onRetry={() => fetchUsers(activeTab)} />
         ) : (
           <UserList users={users} sortType={sortType} />
         )}

@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { SearchIcon, SortIcon } from "../../components/Icons";
 import SortModal from "./SortModal";
-import UserList from "./UserList";
-import { User } from "../../types";
 
 interface SearchWrapperProps {
   $isLoading: boolean;
