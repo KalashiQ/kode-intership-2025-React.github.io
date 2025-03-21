@@ -33,8 +33,8 @@ const TagSkeleton = styled.img`
 `;
 
 const SkeletonContainer = styled.div`
-  margin-top: 20px;
-  height: calc(100vh - 152px); // Вычитаем высоту хедера, поиска и табов
+  margin-top: -1px;
+  height: calc(100vh - 152px);
   overflow-y: auto;
 
   ::-webkit-scrollbar {

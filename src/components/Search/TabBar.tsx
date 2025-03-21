@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { TabType } from '../../types';
+import React from "react";
+import styled from "styled-components";
+import { TabType } from "../../types";
 
 const TabsContainer = styled.div`
   display: flex;
@@ -12,22 +12,22 @@ const TabsWrapper = styled.div`
   display: flex;
   overflow-x: auto;
   position: relative;
-  
+
   ::-webkit-scrollbar {
     display: none;
   }
-  -ms-overflow-style: none;  /* IE и Edge */
-  scrollbar-width: none;  /* Firefox */
-  
+  -ms-overflow-style: none; /* IE и Edge */
+  scrollbar-width: none; /* Firefox */
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
     height: 0.33px;
-    background-color: #C3C3C6;
+    background-color: #c3c3c6;
   }
 `;
 
@@ -36,20 +36,21 @@ const Tab = styled.button<{ active: boolean }>`
   height: 36px;
   border: none;
   background: transparent;
-  color: ${props => props.active ? '#050510' : '#97979B'};
-  border-bottom: 2px solid ${props => props.active ? '#6534FF' : 'transparent'};
+  color: ${(props) => (props.active ? "#050510" : "#97979B")};
+  border-bottom: 2px solid
+    ${(props) => (props.active ? "#6534FF" : "transparent")};
   cursor: pointer;
   white-space: nowrap;
   position: relative;
   z-index: 1;
   outline: none;
   border-radius: 0;
-  font-family: 'Inter', sans-serif;
-  
+  font-family: "Inter", sans-serif;
+
   &:focus {
     outline: none;
   }
-  
+
   &:not(:last-child) {
     margin-right: 6px;
   }
@@ -62,18 +63,18 @@ interface TabBarProps {
 
 const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange }) => {
   const tabs: { id: TabType; label: string }[] = [
-    { id: 'all', label: 'Все' },
-    { id: 'designers', label: 'Designers' },
-    { id: 'analysts', label: 'Analysts' },
-    { id: 'managers', label: 'Managers' },
-    { id: 'ios', label: 'iOS' },
-    { id: 'android', label: 'Android' },
+    { id: "all", label: "Все" },
+    { id: "design", label: "Designers" },
+    { id: "backend", label: "Analysts" },
+    { id: "management", label: "Managers" },
+    { id: "ios", label: "iOS" },
+    { id: "android", label: "Android" },
   ];
 
   return (
     <TabsContainer>
       <TabsWrapper>
-        {tabs.map(tab => (
+        {tabs.map((tab) => (
           <Tab
             active={activeTab === tab.id}
             onClick={() => onTabChange(tab.id)}
@@ -86,4 +87,4 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange }) => {
   );
 };
 
-export default TabBar; 
+export default TabBar;

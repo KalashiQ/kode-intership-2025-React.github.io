@@ -43,7 +43,8 @@ const Search: React.FC = () => {
         const data = await response.json();
         setUsers(data.items);
         setError(null);
-      } catch (err) {
+      } catch (err: unknown) {
+        console.error("Ошибка при загрузке пользователей:", err);
         setError("Произошла ошибка при загрузке данных");
       } finally {
         setIsLoading(false);

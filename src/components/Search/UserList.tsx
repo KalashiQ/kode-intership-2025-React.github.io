@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { User } from "../../types";
 
 const ListContainer = styled.div`
-  margin-top: 20px;
+  margin-top: -1px;
   height: calc(100vh - 152px); // Вычитаем высоту хедера, поиска и табов
   overflow-y: auto;
 
@@ -17,6 +17,10 @@ const ListContainer = styled.div`
 const UserItem = styled.div`
   display: flex;
   padding: 6px 0;
+
+  &:first-child {
+    padding-top: 16px;
+  }
 `;
 
 const Avatar = styled.img`
