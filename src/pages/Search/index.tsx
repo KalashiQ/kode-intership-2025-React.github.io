@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import SearchHeader from "../../components/Search/SearchHeader";
 import SearchInput from "../../components/Search/SearchInput";
@@ -7,6 +7,7 @@ import UserListSkeleton from "../../components/Search/UserListSkeleton";
 import { TabType, User } from "../../types";
 import UserList from "../../components/Search/UserList.tsx";
 import UserListError from "../../components/Search/UserListError";
+import EmptySearchResult from "../../components/Search/EmptySearchResult";
 
 const SearchContainer = styled.div`
   max-width: 1280px;
@@ -59,7 +60,7 @@ const Search: React.FC = () => {
     }
   };
 
-  const sortUsers = (usersToSort: User[]) => {
+  const sortUsers = useCallback((usersToSort: User[]) => {
     if (!sortType) return usersToSort;
 
     return [...usersToSort].sort((a, b) => {
@@ -68,18 +69,20 @@ const Search: React.FC = () => {
       }
       return new Date(a.birthday).getTime() - new Date(b.birthday).getTime();
     });
-  };
+  }, [sortType]);
 
-  const filterUsers = (query: string, usersToFilter = users) => {
+  const filterUsers = useCallback((query: string, usersToFilter = users) => {
     const normalizedQuery = query.toLowerCase();
     return usersToFilter.filter((user) => {
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const email = `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}@gmail.com`;
       return (
         fullName.includes(normalizedQuery) ||
-        user.userTag.toLowerCase().includes(normalizedQuery)
+        user.userTag.toLowerCase().includes(normalizedQuery) ||
+        email.includes(normalizedQuery)
       );
     });
-  };
+  }, [users]);
 
   useEffect(() => {
     fetchUsers(activeTab);
@@ -95,7 +98,7 @@ const Search: React.FC = () => {
 
       return () => clearTimeout(timeoutId);
     }
-  }, [searchQuery, users, sortType]);
+  }, [searchQuery, users, sortType, filterUsers, sortUsers, isLoading]);
 
   const handleSortChange = (type: "alphabet" | "birthday" | null) => {
     setSortType(type);
@@ -125,6 +128,8 @@ const Search: React.FC = () => {
           <UserListSkeleton />
         ) : error ? (
           <UserListError onRetry={() => fetchUsers(activeTab)} />
+        ) : filteredUsers.length === 0 ? (
+          <EmptySearchResult />
         ) : (
           <UserList users={filteredUsers} sortType={sortType} />
         )}

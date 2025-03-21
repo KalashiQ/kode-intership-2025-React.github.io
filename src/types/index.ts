@@ -21,4 +21,5 @@ export interface User {
   userTag: string;
   department: string;
   birthday: string;
+  email: string;
 }
