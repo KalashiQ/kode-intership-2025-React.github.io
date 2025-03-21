@@ -52,12 +52,16 @@ interface SearchInputProps {
   isLoading: boolean;
   onSortChange: (type: "alphabet" | "birthday" | null) => void;
   sortType: "alphabet" | "birthday" | null;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
   isLoading,
   onSortChange,
   sortType,
+  searchQuery,
+  onSearchChange,
 }) => {
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
 
@@ -65,7 +69,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
     <>
       <SearchWrapper $isLoading={isLoading}>
         <SearchIcon />
-        <Input placeholder="Введи имя, тег, почту..." />
+        <Input
+          placeholder="Введи имя, тег, почту..."
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+        />
         <SortButton onClick={() => setIsSortModalOpen(true)}>
           <SortIcon />
         </SortButton>

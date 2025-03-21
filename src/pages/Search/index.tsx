@@ -25,9 +25,9 @@ const Search: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sortType, setSortType] = useState<"alphabet" | "birthday" | null>(
-    null
-  );
+  const [sortType, setSortType] = useState<"alphabet" | "birthday" | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
   const fetchUsers = async (department: TabType = "all") => {
     setIsLoading(true);
@@ -45,6 +45,11 @@ const Search: React.FC = () => {
 
       const data = await response.json();
       setUsers(data.items);
+      
+      const filtered = filterUsers(searchQuery, data.items);
+      const sorted = sortUsers(filtered);
+      setFilteredUsers(sorted);
+      
       setError(null);
     } catch (err: unknown) {
       console.error("Ошибка при загрузке пользователей:", err);
@@ -54,9 +59,43 @@ const Search: React.FC = () => {
     }
   };
 
+  const sortUsers = (usersToSort: User[]) => {
+    if (!sortType) return usersToSort;
+
+    return [...usersToSort].sort((a, b) => {
+      if (sortType === "alphabet") {
+        return `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`);
+      }
+      return new Date(a.birthday).getTime() - new Date(b.birthday).getTime();
+    });
+  };
+
+  const filterUsers = (query: string, usersToFilter = users) => {
+    const normalizedQuery = query.toLowerCase();
+    return usersToFilter.filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      return (
+        fullName.includes(normalizedQuery) ||
+        user.userTag.toLowerCase().includes(normalizedQuery)
+      );
+    });
+  };
+
   useEffect(() => {
     fetchUsers(activeTab);
   }, [activeTab]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timeoutId = setTimeout(() => {
+        const filtered = filterUsers(searchQuery);
+        const sorted = sortUsers(filtered);
+        setFilteredUsers(sorted);
+      }, 300);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [searchQuery, users, sortType]);
 
   const handleSortChange = (type: "alphabet" | "birthday" | null) => {
     setSortType(type);
@@ -64,6 +103,10 @@ const Search: React.FC = () => {
 
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
   };
 
   return (
@@ -74,6 +117,8 @@ const Search: React.FC = () => {
           isLoading={isLoading}
           sortType={sortType}
           onSortChange={handleSortChange}
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
         />
         <TabBar activeTab={activeTab} onTabChange={handleTabChange} />
         {isLoading ? (
@@ -81,7 +126,7 @@ const Search: React.FC = () => {
         ) : error ? (
           <UserListError onRetry={() => fetchUsers(activeTab)} />
         ) : (
-          <UserList users={users} sortType={sortType} />
+          <UserList users={filteredUsers} sortType={sortType} />
         )}
       </ContentWrapper>
     </SearchContainer>
