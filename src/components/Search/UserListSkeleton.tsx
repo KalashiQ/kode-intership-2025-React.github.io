@@ -7,6 +7,10 @@ import rectShort from "../../assets/Rectangle 193.png";
 const SkeletonItem = styled.div`
   display: flex;
   padding: 6px 0;
+
+  &:first-child {
+    padding-top: 16px;
+  }
 `;
 
 const Avatar = styled.img`

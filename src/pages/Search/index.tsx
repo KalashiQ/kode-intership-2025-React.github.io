@@ -5,8 +5,8 @@ import SearchInput from "../../components/Search/SearchInput";
 import TabBar from "../../components/Search/TabBar";
 import UserListSkeleton from "../../components/Search/UserListSkeleton";
 import { TabType, User } from "../../types";
-import ErrorScreen from "../../components/Error/ErrorScreen.tsx";
 import UserList from "../../components/Search/UserList.tsx";
+import UserListError from "../../components/Search/UserListError";
 
 const SearchContainer = styled.div`
   max-width: 1280px;
@@ -26,45 +26,34 @@ const Search: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(
-          "https://stoplight.io/mocks/kode-frontend-team/koder-stoplight/86566464/users?__example=all",
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Ошибка при загрузке данных");
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        "https://stoplight.io/mocks/kode-frontend-team/koder-stoplight/86566464/users?__example=all",
+        {
+          headers: { "Content-Type": "application/json" },
         }
+      );
 
-        const data = await response.json();
-        setUsers(data.items);
-        setError(null);
-      } catch (err: unknown) {
-        console.error("Ошибка при загрузке пользователей:", err);
-        setError("Произошла ошибка при загрузке данных");
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error("Ошибка при загрузке данных");
       }
-    };
 
+      const data = await response.json();
+      setUsers(data.items);
+      setError(null);
+    } catch (err: unknown) {
+      console.error("Ошибка при загрузке пользователей:", err);
+      setError("Произошла ошибка при загрузке данных");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUsers();
   }, []);
-
-  if (error) {
-    return (
-      <ErrorScreen
-        message={error}
-        onRetry={() => {
-          setIsLoading(true);
-          setError(null);
-        }}
-      />
-    );
-  }
 
   return (
     <SearchContainer>
@@ -72,7 +61,13 @@ const Search: React.FC = () => {
         <SearchHeader />
         <SearchInput isLoading={isLoading} />
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
-        {isLoading ? <UserListSkeleton /> : <UserList users={users} />}
+        {isLoading ? (
+          <UserListSkeleton />
+        ) : error ? (
+          <UserListError onRetry={fetchUsers} />
+        ) : (
+          <UserList users={users} />
+        )}
       </ContentWrapper>
     </SearchContainer>
   );
