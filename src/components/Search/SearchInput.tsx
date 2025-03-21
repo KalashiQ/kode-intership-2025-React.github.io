@@ -10,7 +10,7 @@ interface SearchWrapperProps {
 const SearchWrapper = styled.div<SearchWrapperProps>`
   display: flex;
   align-items: center;
-  width: ${(props) => (props.$isLoading ? "343px" : "100%")};
+  width: 100%;
   height: 43px;
   margin: 6px 0 0 0;
   padding: 8px 12px;
