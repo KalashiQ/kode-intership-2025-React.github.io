@@ -25,6 +25,7 @@ const Search: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortType, setSortType] = useState<"alphabet" | "birthday">("alphabet");
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -55,11 +56,20 @@ const Search: React.FC = () => {
     fetchUsers();
   }, []);
 
+  const handleSortChange = (type: "alphabet" | "birthday") => {
+    setSortType(type);
+    // Здесь можно добавить логику сортировки пользователей
+  };
+
   return (
     <SearchContainer>
       <ContentWrapper>
         <SearchHeader />
-        <SearchInput isLoading={isLoading} />
+        <SearchInput
+          isLoading={isLoading}
+          sortType={sortType}
+          onSortChange={handleSortChange}
+        />
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
         {isLoading ? (
           <UserListSkeleton />

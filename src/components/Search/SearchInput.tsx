@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { SearchIcon, SortIcon } from "../../components/Icons";
+import SortModal from "./SortModal";
 
 interface SearchWrapperProps {
   $isLoading: boolean;
@@ -49,17 +50,33 @@ const SortButton = styled.button`
 
 interface SearchInputProps {
   isLoading: boolean;
+  onSortChange: (type: "alphabet" | "birthday") => void;
+  sortType: "alphabet" | "birthday";
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ isLoading }) => {
+const SearchInput: React.FC<SearchInputProps> = ({
+  isLoading,
+  onSortChange,
+  sortType,
+}) => {
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+
   return (
-    <SearchWrapper $isLoading={isLoading}>
-      <SearchIcon />
-      <Input placeholder="Введи имя, тег, почту..." />
-      <SortButton>
-        <SortIcon />
-      </SortButton>
-    </SearchWrapper>
+    <>
+      <SearchWrapper $isLoading={isLoading}>
+        <SearchIcon />
+        <Input placeholder="Введи имя, тег, почту..." />
+        <SortButton onClick={() => setIsSortModalOpen(true)}>
+          <SortIcon />
+        </SortButton>
+      </SearchWrapper>
+      <SortModal
+        isOpen={isSortModalOpen}
+        onClose={() => setIsSortModalOpen(false)}
+        sortType={sortType}
+        onSortChange={onSortChange}
+      />
+    </>
   );
 };
 
