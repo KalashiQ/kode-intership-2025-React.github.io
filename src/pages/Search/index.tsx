@@ -69,7 +69,7 @@ const Search: React.FC = () => {
     <SearchContainer>
       <ContentWrapper>
         <SearchHeader />
-        <SearchInput />
+        <SearchInput isLoading={isLoading} />
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
         {isLoading ? <UserListSkeleton /> : <UserList users={users} />}
       </ContentWrapper>

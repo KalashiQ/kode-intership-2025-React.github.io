@@ -1,16 +1,20 @@
-import React from 'react';
-import styled from 'styled-components';
-import { SearchIcon, SortIcon } from '../../components/Icons';
+import React from "react";
+import styled from "styled-components";
+import { SearchIcon, SortIcon } from "../../components/Icons";
 
-const SearchWrapper = styled.div`
+interface SearchWrapperProps {
+  $isLoading: boolean;
+}
+
+const SearchWrapper = styled.div<SearchWrapperProps>`
   display: flex;
   align-items: center;
-  width: 343px;
+  width: ${(props) => (props.$isLoading ? "343px" : "100%")};
   height: 43px;
   margin: 6px 0 0 0;
   padding: 8px 12px;
   border-radius: 16px;
-  background: #F5F5F5;
+  background: #f5f5f5;
 `;
 
 const Input = styled.input`
@@ -18,17 +22,17 @@ const Input = styled.input`
   border: none;
   background: transparent;
   margin-left: 10px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 15px;
   line-height: 20px;
   color: #050510;
   vertical-align: middle;
-  
+
   &::placeholder {
-    color: #9E9E9E;
+    color: #9e9e9e;
   }
-  
+
   &:focus {
     outline: none;
   }
@@ -43,9 +47,13 @@ const SortButton = styled.button`
   padding: 0;
 `;
 
-const SearchInput: React.FC = () => {
+interface SearchInputProps {
+  isLoading: boolean;
+}
+
+const SearchInput: React.FC<SearchInputProps> = ({ isLoading }) => {
   return (
-    <SearchWrapper>
+    <SearchWrapper $isLoading={isLoading}>
       <SearchIcon />
       <Input placeholder="Введи имя, тег, почту..." />
       <SortButton>
@@ -55,4 +63,4 @@ const SearchInput: React.FC = () => {
   );
 };
 
-export default SearchInput; 
+export default SearchInput;
