@@ -120,7 +120,7 @@ const UserDetails: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = location.state?.user as User;
-  const [avatarUrl, setAvatarUrl] = useState(user?.fallbackAvatarUrl || user?.avatarUrl || '');
+  const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl || '');
 
   useEffect(() => {
     if (!user) {

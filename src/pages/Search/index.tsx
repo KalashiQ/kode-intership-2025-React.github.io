@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import SearchHeader from "../../components/Search/SearchHeader";
 import SearchInput from "../../components/Search/SearchInput";
 import TabBar from "../../components/Search/TabBar";
@@ -46,22 +47,21 @@ const Search: React.FC = () => {
   const fetchUsers = useCallback(async (department: TabType = "all") => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://stoplight.io/mocks/kode-frontend-team/koder-stoplight/86566464/users?__example=${department}`,
-        {
-          headers: { "Content-Type": "application/json" },
+      const response = await axios.get(
+        `https://stoplight.io/mocks/kode-frontend-team/koder-stoplight/86566464/users`, {
+          params: {
+            __example: department
+          },
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Ошибка при загрузке данных");
-      }
-
-      const data = await response.json();
-      setUsers(data.items);
-      setFilteredUsers(data.items);
+      setUsers(response.data.items);
+      setFilteredUsers(response.data.items);
       setError(null);
-    } catch (err: unknown) {
+    } catch (err) {
       console.error("Ошибка при загрузке пользователей:", err);
       setError("Произошла ошибка при загрузке данных");
     } finally {
