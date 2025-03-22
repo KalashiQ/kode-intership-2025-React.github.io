@@ -98,6 +98,14 @@ const Separator = styled.img`
   margin: 0 0 12px;
 `;
 
+const PhoneLink = styled.a`
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+`;
+
 const getAgeWord = (age: number): string => {
   const lastDigit = age % 10;
   const lastTwoDigits = age % 100;
@@ -194,10 +202,10 @@ const UserDetails: React.FC = () => {
         <Separator src={SeparatorIcon} alt="" />
         
         <InfoRow>
-          <InfoLabel>
+          <PhoneLink href={`tel:${user.phone}`}>
             <img src={PhoneIcon} alt="Phone" />
             {formatPhoneNumber(user.phone)}
-          </InfoLabel>
+          </PhoneLink>
         </InfoRow>
       </InfoSection>
     </Container>
