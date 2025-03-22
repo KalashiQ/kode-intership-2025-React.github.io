@@ -96,6 +96,16 @@ const Separator = styled.img`
   margin: 0 0 24px;
 `;
 
+const getAgeWord = (age: number): string => {
+  const lastDigit = age % 10;
+  const lastTwoDigits = age % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return 'лет';
+  if (lastDigit === 1) return 'год';
+  if (lastDigit >= 2 && lastDigit <= 4) return 'года';
+  return 'лет';
+};
+
 const UserDetails: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -157,7 +167,7 @@ const UserDetails: React.FC = () => {
             <img src={FavoriteIcon} alt="Birthday" />
             {formatBirthday(user.birthday)}
           </InfoLabel>
-          <InfoValue>{calculateAge(user.birthday)} лет</InfoValue>
+          <InfoValue>{calculateAge(user.birthday)} {getAgeWord(calculateAge(user.birthday))}</InfoValue>
         </InfoRow>
         
         <Separator src={SeparatorIcon} alt="" />
