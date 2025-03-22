@@ -1,8 +1,7 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Search from './pages/Search';
 import styled, { createGlobalStyle } from 'styled-components';
-import UserDetails from './components/UserDetails/UserDetails';
+import UserDetails from './pages/Search/UserDetails';
 
 const GlobalStyle = createGlobalStyle`
   * {
