@@ -106,6 +106,16 @@ const UserDetails: React.FC = () => {
     return null;
   }
 
+  const formatPhoneNumber = (phone: string): string => {
+    const cleaned = phone.replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})$/);
+    
+    if (match) {
+      return `+${match[1]} (${match[2]}) ${match[3]} ${match[4]} ${match[5]}`;
+    }
+    return phone;
+  };
+
   const calculateAge = (birthday: string) => {
     const birthDate = new Date(birthday);
     const today = new Date();
@@ -155,7 +165,7 @@ const UserDetails: React.FC = () => {
         <InfoRow>
           <InfoLabel>
             <img src={PhoneIcon} alt="Phone" />
-            {user.phone}
+            {formatPhoneNumber(user.phone)}
           </InfoLabel>
         </InfoRow>
       </InfoSection>
