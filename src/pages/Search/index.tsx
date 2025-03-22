@@ -42,12 +42,18 @@ const HeaderContent = styled.div`
 `;
 
 const Search: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>("all");
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    return localStorage.getItem('activeTab') as TabType || 'all'
+  });
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sortType, setSortType] = useState<"alphabet" | "birthday" | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [sortType, setSortType] = useState<"alphabet" | "birthday" | null>(() => {
+    return localStorage.getItem('sortType') as "alphabet" | "birthday" | null || null
+  });
+  const [searchQuery, setSearchQuery] = useState(() => {
+    return localStorage.getItem('searchQuery') || ''
+  });
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [wasOffline, setWasOffline] = useState(false);
@@ -142,14 +148,17 @@ const Search: React.FC = () => {
 
   const handleSortChange = (type: "alphabet" | "birthday" | null) => {
     setSortType(type);
+    localStorage.setItem('sortType', type || '');
   };
 
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
+    localStorage.setItem('activeTab', tab);
   };
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
+    localStorage.setItem('searchQuery', query);
   };
 
   const showNetworkStatus = !isOnline || (isLoading && wasOffline);

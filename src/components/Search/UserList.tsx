@@ -134,7 +134,12 @@ const UserList: React.FC<UserListProps> = ({ users, sortType, hasNetworkStatus =
   }, [users]);
 
   const handleUserClick = (user: User) => {
-    navigate(`/user/${user.id}`, { state: { user } });
+    navigate(`/user/${user.id}`, { 
+      state: { 
+        user,
+        loadedAvatarUrl: avatarUsers[user.id] || user.avatarUrl 
+      } 
+    });
   };
 
   const groupedUsers = useMemo(() => {

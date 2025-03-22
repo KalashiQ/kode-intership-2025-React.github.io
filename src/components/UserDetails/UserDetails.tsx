@@ -120,7 +120,12 @@ const UserDetails: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = location.state?.user as User;
-  const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl || '');
+  const loadedAvatarUrl = location.state?.loadedAvatarUrl;
+  const [avatarUrl, setAvatarUrl] = useState(loadedAvatarUrl || user?.avatarUrl || '');
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -128,18 +133,19 @@ const UserDetails: React.FC = () => {
       return;
     }
 
-    const loadAvatar = async () => {
-      try {
-        await loadImageWithTimeout(user.avatarUrl);
-        setAvatarUrl(user.avatarUrl);
-      } catch {
-        const fallbackUrl = generateFallbackAvatar(user.firstName, user.lastName);
-        setAvatarUrl(fallbackUrl);
-      }
-    };
-
-    loadAvatar();
-  }, [user, navigate]);
+    if (!loadedAvatarUrl) {
+      const loadAvatar = async () => {
+        try {
+          await loadImageWithTimeout(user.avatarUrl);
+          setAvatarUrl(user.avatarUrl);
+        } catch {
+          const fallbackUrl = generateFallbackAvatar(user.firstName, user.lastName);
+          setAvatarUrl(fallbackUrl);
+        }
+      };
+      loadAvatar();
+    }
+  }, [user, navigate, loadedAvatarUrl]);
 
   if (!user) {
     return null;
@@ -179,7 +185,7 @@ const UserDetails: React.FC = () => {
   return (
     <Container>
       <Header>
-        <BackButton onClick={() => navigate(-1)}>
+        <BackButton onClick={handleBack}>
           <img src={BackIcon} alt="Back" />
         </BackButton>
         <Avatar src={avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
