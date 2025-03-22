@@ -9,17 +9,36 @@ import { TabType, User } from "../../types";
 import UserList from "../../components/Search/UserList.tsx";
 import UserListError from "../../components/Search/UserListError";
 import EmptySearchResult from "../../components/Search/EmptySearchResult";
+import NetworkStatus from "../../components/Search/NetworkStatus";
 
 const SearchContainer = styled.div`
   max-width: 1280px;
   margin: 0 auto;
-  padding: 8px 16px 0;
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ContentWrapper = styled.div`
-  margin-left: 8px;
+  padding: 8px 16px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+`;
+
+const HeaderSection = styled.div`
+  height: 108px;
+  position: relative;
+`;
+
+const HeaderContent = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 `;
 
 const Search: React.FC = () => {
@@ -30,9 +49,11 @@ const Search: React.FC = () => {
   const [sortType, setSortType] = useState<"alphabet" | "birthday" | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [wasOffline, setWasOffline] = useState(false);
 
-  const filterUsers = useCallback((query: string, usersToFilter = users) => {
-    const normalizedQuery = query.toLowerCase();
+  const filterUsers = useCallback((text: string, usersToFilter = users) => {
+    const normalizedQuery = text.toLowerCase();
     return usersToFilter.filter((user) => {
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
       const email = `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}@gmail.com`;
@@ -96,6 +117,29 @@ const Search: React.FC = () => {
     }
   }, [searchQuery, users, sortType, filterUsers, sortUsers, isLoading]);
 
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      if (wasOffline) {
+        setIsLoading(true);
+        fetchUsers(activeTab);
+      }
+    };
+    
+    const handleOffline = () => {
+      setIsOnline(false);
+      setWasOffline(true);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [activeTab, fetchUsers, wasOffline]);
+
   const handleSortChange = (type: "alphabet" | "birthday" | null) => {
     setSortType(type);
   };
@@ -108,26 +152,48 @@ const Search: React.FC = () => {
     setSearchQuery(query);
   };
 
+  const showNetworkStatus = !isOnline || (isLoading && wasOffline);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setWasOffline(false);
+    }
+  }, [isLoading]);
+
   return (
     <SearchContainer>
       <ContentWrapper>
-        <SearchHeader />
-        <SearchInput
-          isLoading={isLoading}
-          sortType={sortType}
-          onSortChange={handleSortChange}
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-        />
+        <HeaderSection>
+          <HeaderContent>
+            {showNetworkStatus ? (
+              <NetworkStatus isOnline={isOnline} isLoading={isLoading && wasOffline} />
+            ) : (
+              <>
+                <SearchHeader />
+                <SearchInput
+                  isLoading={isLoading}
+                  sortType={sortType}
+                  onSortChange={handleSortChange}
+                  searchQuery={searchQuery}
+                  onSearchChange={handleSearchChange}
+                />
+              </>
+            )}
+          </HeaderContent>
+        </HeaderSection>
         <TabBar activeTab={activeTab} onTabChange={handleTabChange} />
-        {isLoading ? (
-          <UserListSkeleton />
+        {(isLoading && !wasOffline) ? (
+          <UserListSkeleton hasNetworkStatus={showNetworkStatus} />
         ) : error ? (
           <UserListError onRetry={() => fetchUsers(activeTab)} />
         ) : filteredUsers.length === 0 ? (
           <EmptySearchResult />
         ) : (
-          <UserList users={filteredUsers} sortType={sortType} />
+          <UserList 
+            users={filteredUsers} 
+            sortType={sortType} 
+            hasNetworkStatus={showNetworkStatus}
+          />
         )}
       </ContentWrapper>
     </SearchContainer>

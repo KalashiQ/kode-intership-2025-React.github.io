@@ -35,10 +35,11 @@ const TagSkeleton = styled.img`
   margin-top: 6px;
 `;
 
-const SkeletonContainer = styled.div`
+const SkeletonContainer = styled.div<{ $hasNetworkStatus?: boolean }>`
   margin-top: -1px;
-  height: calc(100vh - 152px);
+  flex: 1;
   overflow-y: auto;
+  min-height: 0;
 
   ::-webkit-scrollbar {
     display: none;
@@ -47,9 +48,13 @@ const SkeletonContainer = styled.div`
   -ms-overflow-style: none;
 `;
 
-const UserListSkeleton: React.FC = () => {
+interface UserListSkeletonProps {
+  hasNetworkStatus?: boolean;
+}
+
+const UserListSkeleton: React.FC<UserListSkeletonProps> = ({ hasNetworkStatus = false }) => {
   return (
-    <SkeletonContainer>
+    <SkeletonContainer $hasNetworkStatus={hasNetworkStatus}>
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item, index) => (
         <SkeletonItem key={item} isFirst={index === 0}>
           <Avatar src={ellipse} alt="" />

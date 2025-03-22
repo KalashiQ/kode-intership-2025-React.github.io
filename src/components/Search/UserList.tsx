@@ -5,11 +5,12 @@ import { sortUsersByAlphabet, sortUsersByBirthday } from "../../utils/sorting";
 import { useNavigate } from 'react-router-dom';
 import { loadImageWithTimeout, generateFallbackAvatar } from "../../utils/avatarUtils";
 
-const ListContainer = styled.div`
+const ListContainer = styled.div<{ $hasNetworkStatus?: boolean }>`
   margin-top: -1px;
-  height: calc(100vh - 152px);
+  flex: 1;
   overflow-y: auto;
   padding-bottom: 24px;
+  min-height: 0;
 
   ::-webkit-scrollbar {
     display: none;
@@ -104,9 +105,10 @@ const Department = styled.span`
 interface UserListProps {
   users: User[];
   sortType: "alphabet" | "birthday" | null;
+  hasNetworkStatus?: boolean;
 }
 
-const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
+const UserList: React.FC<UserListProps> = ({ users, sortType, hasNetworkStatus = false }) => {
   const navigate = useNavigate();
   
   const [avatarUsers, setAvatarUsers] = useState<Record<string, string>>({});
@@ -186,14 +188,14 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
 
   if (sortType !== "birthday") {
     return (
-      <ListContainer>
+      <ListContainer $hasNetworkStatus={hasNetworkStatus}>
         {groupedUsers.currentYear.map(renderUserItem)}
       </ListContainer>
     );
   }
 
   return (
-    <ListContainer>
+    <ListContainer $hasNetworkStatus={hasNetworkStatus}>
       {groupedUsers.currentYear.map(renderUserItem)}
       {groupedUsers.nextYear.length > 0 && (
         <>
