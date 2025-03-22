@@ -16,6 +16,7 @@ export type TabType =
 export interface User {
   id: string;
   avatarUrl: string;
+  fallbackAvatarUrl?: string;
   firstName: string;
   lastName: string;
   userTag: string;

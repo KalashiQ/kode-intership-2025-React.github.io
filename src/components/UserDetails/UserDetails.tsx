@@ -5,6 +5,8 @@ import FavoriteIcon from '../../assets/favorite.svg';
 import PhoneIcon from '../../assets/phone-alt.svg';
 import SeparatorIcon from '../../assets/separator.svg';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { loadImageWithTimeout, generateFallbackAvatar } from "../../utils/avatarUtils";
 
 const Container = styled.div`
   height: 100vh;
@@ -110,9 +112,28 @@ const UserDetails: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = location.state?.user as User;
+  const [avatarUrl, setAvatarUrl] = useState(user?.fallbackAvatarUrl || user?.avatarUrl || '');
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+      return;
+    }
+
+    const loadAvatar = async () => {
+      try {
+        await loadImageWithTimeout(user.avatarUrl);
+        setAvatarUrl(user.avatarUrl);
+      } catch {
+        const fallbackUrl = generateFallbackAvatar(user.firstName, user.lastName);
+        setAvatarUrl(fallbackUrl);
+      }
+    };
+
+    loadAvatar();
+  }, [user, navigate]);
 
   if (!user) {
-    navigate('/');
     return null;
   }
 
@@ -153,7 +174,7 @@ const UserDetails: React.FC = () => {
         <BackButton onClick={() => navigate(-1)}>
           <img src={BackIcon} alt="Back" />
         </BackButton>
-        <Avatar src={user.avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
+        <Avatar src={avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
         <UserName>
           {user.firstName} {user.lastName}
           <UserTag> {user.userTag}</UserTag>
