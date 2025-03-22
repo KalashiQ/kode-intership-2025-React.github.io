@@ -100,7 +100,11 @@ interface UserListProps {
 
 const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
   const groupedUsers = useMemo(() => {
-    if (sortType !== "birthday") {
+    if (!sortType) {
+      return { currentYear: users, nextYear: [] };
+    }
+    
+    if (sortType === "alphabet") {
       return { currentYear: sortUsersByAlphabet(users), nextYear: [] };
     }
 

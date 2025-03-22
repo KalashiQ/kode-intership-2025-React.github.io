@@ -48,8 +48,7 @@ const Search: React.FC = () => {
       setUsers(data.items);
       
       const filtered = filterUsers(searchQuery, data.items);
-      const sorted = sortUsers(filtered);
-      setFilteredUsers(sorted);
+      setFilteredUsers(filtered);
       
       setError(null);
     } catch (err: unknown) {
@@ -92,7 +91,7 @@ const Search: React.FC = () => {
     if (!isLoading) {
       const timeoutId = setTimeout(() => {
         const filtered = filterUsers(searchQuery);
-        const sorted = sortUsers(filtered);
+        const sorted = sortType ? sortUsers(filtered) : filtered;
         setFilteredUsers(sorted);
       }, 300);
 
