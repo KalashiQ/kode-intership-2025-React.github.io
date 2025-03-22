@@ -74,7 +74,7 @@ const InfoRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 `;
 
 const InfoLabel = styled.div`
@@ -95,7 +95,7 @@ const InfoValue = styled.span`
 const Separator = styled.img`
   width: 100%;
   height: 10px;
-  margin: 0 0 24px;
+  margin: 0 0 12px;
 `;
 
 const getAgeWord = (age: number): string => {

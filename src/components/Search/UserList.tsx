@@ -9,6 +9,7 @@ const ListContainer = styled.div`
   margin-top: -1px;
   height: calc(100vh - 152px);
   overflow-y: auto;
+  padding-bottom: 24px;
 
   ::-webkit-scrollbar {
     display: none;
@@ -108,24 +109,23 @@ interface UserListProps {
 const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
   const navigate = useNavigate();
   
-  const [processedUsers, setProcessedUsers] = useState<User[]>(users);
+  const [avatarUsers, setAvatarUsers] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const processUserAvatars = async () => {
-      const updatedUsers = await Promise.all(
+      const avatarMap: Record<string, string> = {};
+      
+      await Promise.all(
         users.map(async (user) => {
           try {
             await loadImageWithTimeout(user.avatarUrl);
-            return user;
           } catch {
-            return {
-              ...user,
-              fallbackAvatarUrl: generateFallbackAvatar(user.firstName, user.lastName)
-            };
+            avatarMap[user.id] = generateFallbackAvatar(user.firstName, user.lastName);
           }
         })
       );
-      setProcessedUsers(updatedUsers);
+      
+      setAvatarUsers(avatarMap);
     };
 
     processUserAvatars();
@@ -137,16 +137,16 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
 
   const groupedUsers = useMemo(() => {
     if (!sortType) {
-      return { currentYear: processedUsers, nextYear: [] };
+      return { currentYear: users, nextYear: [] };
     }
     
     if (sortType === "alphabet") {
-      return { currentYear: sortUsersByAlphabet(processedUsers), nextYear: [] };
+      return { currentYear: sortUsersByAlphabet(users), nextYear: [] };
     }
 
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
-    const sortedUsers = sortUsersByBirthday(processedUsers);
+    const sortedUsers = sortUsersByBirthday(users);
 
     return sortedUsers.reduce(
       (acc, user) => {
@@ -162,7 +162,7 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
       },
       { currentYear: [] as User[], nextYear: [] as User[] }
     );
-  }, [processedUsers, sortType]);
+  }, [users, sortType]);
 
   const renderUserItem = (user: User, index: number) => (
     <UserItem 
@@ -171,7 +171,7 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
       isFirst={index === 0}
     >
       <Avatar 
-        src={user.fallbackAvatarUrl || user.avatarUrl} 
+        src={avatarUsers[user.id] || user.avatarUrl} 
         alt={`${user.firstName} ${user.lastName}`} 
       />
       <Content>
@@ -187,7 +187,7 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
   if (sortType !== "birthday") {
     return (
       <ListContainer>
-        {processedUsers.map(renderUserItem)}
+        {groupedUsers.currentYear.map(renderUserItem)}
       </ListContainer>
     );
   }
