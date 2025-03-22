@@ -29,6 +29,8 @@ const Input = styled.input`
   line-height: 20px;
   color: #050510;
   vertical-align: middle;
+  caret-color: #6534FF;
+  caret-width: 2px;
 
   &::placeholder {
     color: #9e9e9e;
@@ -65,6 +67,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
 
+  const handleInputFocus = () => {
+    onSearchChange("");
+  };
+
   return (
     <>
       <SearchWrapper $isLoading={isLoading}>
@@ -73,6 +79,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           placeholder="Введи имя, тег, почту..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
+          onFocus={handleInputFocus}
         />
         <SortButton onClick={() => setIsSortModalOpen(true)}>
           <SortIcon />

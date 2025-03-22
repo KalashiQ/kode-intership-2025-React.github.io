@@ -1,12 +1,15 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import { User } from "../../types";
 import { sortUsersByAlphabet, sortUsersByBirthday } from "../../utils/sorting";
+import { useNavigate } from 'react-router-dom';
+import { loadImageWithTimeout, generateFallbackAvatar } from "../../utils/avatarUtils";
 
 const ListContainer = styled.div`
   margin-top: -1px;
   height: calc(100vh - 152px);
   overflow-y: auto;
+  padding-bottom: 24px;
 
   ::-webkit-scrollbar {
     display: none;
@@ -15,12 +18,16 @@ const ListContainer = styled.div`
   -ms-overflow-style: none;
 `;
 
-const UserItem = styled.div`
+const UserItem = styled.div<{ isFirst?: boolean }>`
   display: flex;
-  padding: 6px 0;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+  margin-top: ${props => props.isFirst ? '16px' : '0'};
 
-  &:first-child {
-    padding-top: 16px;
+  &:hover {
+    background-color: #F7F7F8;
   }
 `;
 
@@ -63,6 +70,7 @@ const Avatar = styled.img`
   width: 72px;
   height: 72px;
   border-radius: 50%;
+  background-color: #F7F7F8;
 `;
 
 const Content = styled.div`
@@ -99,8 +107,40 @@ interface UserListProps {
 }
 
 const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
+  const navigate = useNavigate();
+  
+  const [avatarUsers, setAvatarUsers] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const processUserAvatars = async () => {
+      const avatarMap: Record<string, string> = {};
+      
+      await Promise.all(
+        users.map(async (user) => {
+          try {
+            await loadImageWithTimeout(user.avatarUrl);
+          } catch {
+            avatarMap[user.id] = generateFallbackAvatar(user.firstName, user.lastName);
+          }
+        })
+      );
+      
+      setAvatarUsers(avatarMap);
+    };
+
+    processUserAvatars();
+  }, [users]);
+
+  const handleUserClick = (user: User) => {
+    navigate(`/user/${user.id}`, { state: { user } });
+  };
+
   const groupedUsers = useMemo(() => {
-    if (sortType !== "birthday") {
+    if (!sortType) {
+      return { currentYear: users, nextYear: [] };
+    }
+    
+    if (sortType === "alphabet") {
       return { currentYear: sortUsersByAlphabet(users), nextYear: [] };
     }
 
@@ -124,56 +164,43 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
     );
   }, [users, sortType]);
 
+  const renderUserItem = (user: User, index: number) => (
+    <UserItem 
+      key={user.id} 
+      onClick={() => handleUserClick(user)}
+      isFirst={index === 0}
+    >
+      <Avatar 
+        src={avatarUsers[user.id] || user.avatarUrl} 
+        alt={`${user.firstName} ${user.lastName}`} 
+      />
+      <Content>
+        <NameContainer>
+          <Name>{`${user.firstName} ${user.lastName}`}</Name>
+          <Tag>{user.userTag}</Tag>
+        </NameContainer>
+        <Department>{user.department}</Department>
+      </Content>
+    </UserItem>
+  );
+
   if (sortType !== "birthday") {
     return (
       <ListContainer>
-        {groupedUsers.currentYear.map((user) => (
-          <UserItem key={user.id}>
-            <Avatar src={user.avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
-            <Content>
-              <NameContainer>
-                <Name>{`${user.firstName} ${user.lastName}`}</Name>
-                <Tag>{user.userTag}</Tag>
-              </NameContainer>
-              <Department>{user.department}</Department>
-            </Content>
-          </UserItem>
-        ))}
+        {groupedUsers.currentYear.map(renderUserItem)}
       </ListContainer>
     );
   }
 
   return (
     <ListContainer>
-      {groupedUsers.currentYear.map((user) => (
-        <UserItem key={user.id}>
-          <Avatar src={user.avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
-          <Content>
-            <NameContainer>
-              <Name>{`${user.firstName} ${user.lastName}`}</Name>
-              <Tag>{user.userTag}</Tag>
-            </NameContainer>
-            <Department>{user.department}</Department>
-          </Content>
-        </UserItem>
-      ))}
+      {groupedUsers.currentYear.map(renderUserItem)}
       {groupedUsers.nextYear.length > 0 && (
         <>
           <YearDivider>
             <YearLabel>{new Date().getFullYear() + 1}</YearLabel>
           </YearDivider>
-          {groupedUsers.nextYear.map((user) => (
-            <UserItem key={user.id}>
-              <Avatar src={user.avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
-              <Content>
-                <NameContainer>
-                  <Name>{`${user.firstName} ${user.lastName}`}</Name>
-                  <Tag>{user.userTag}</Tag>
-                </NameContainer>
-                <Department>{user.department}</Department>
-              </Content>
-            </UserItem>
-          ))}
+          {groupedUsers.nextYear.map(renderUserItem)}
         </>
       )}
     </ListContainer>
