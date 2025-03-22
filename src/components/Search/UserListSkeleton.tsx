@@ -4,30 +4,29 @@ import ellipse from "../../assets/Ellipse 9.png";
 import rectLong from "../../assets/Rectangle 194.png";
 import rectShort from "../../assets/Rectangle 193.png";
 
-const SkeletonItem = styled.div`
+const SkeletonItem = styled.div<{ isFirst?: boolean }>`
   display: flex;
-  padding: 6px 0;
-
-  &:first-child {
-    padding-top: 16px;
-  }
+  padding: 6px 16px;
+  border-radius: 8px;
+  margin-top: ${props => props.isFirst ? '16px' : '0'};
 `;
 
 const Avatar = styled.img`
   width: 72px;
   height: 72px;
+  border-radius: 50%;
 `;
 
 const Content = styled.div`
   margin-left: 16px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `;
 
 const NameSkeleton = styled.img`
   width: 144px;
   height: 16px;
-  margin-top: 25px;
 `;
 
 const TagSkeleton = styled.img`
@@ -51,8 +50,8 @@ const SkeletonContainer = styled.div`
 const UserListSkeleton: React.FC = () => {
   return (
     <SkeletonContainer>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
-        <SkeletonItem key={item}>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item, index) => (
+        <SkeletonItem key={item} isFirst={index === 0}>
           <Avatar src={ellipse} alt="" />
           <Content>
             <NameSkeleton src={rectLong} alt="" />

@@ -17,12 +17,16 @@ const ListContainer = styled.div`
   -ms-overflow-style: none;
 `;
 
-const UserItem = styled.div`
+const UserItem = styled.div<{ isFirst?: boolean }>`
   display: flex;
-  padding: 6px 0;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+  margin-top: ${props => props.isFirst ? '16px' : '0'};
 
-  &:first-child {
-    padding-top: 16px;
+  &:hover {
+    background-color: #F7F7F8;
   }
 `;
 
@@ -160,8 +164,12 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
     );
   }, [processedUsers, sortType]);
 
-  const renderUserItem = (user: User) => (
-    <UserItem key={user.id} onClick={() => handleUserClick(user)}>
+  const renderUserItem = (user: User, index: number) => (
+    <UserItem 
+      key={user.id} 
+      onClick={() => handleUserClick(user)}
+      isFirst={index === 0}
+    >
       <Avatar 
         src={user.fallbackAvatarUrl || user.avatarUrl} 
         alt={`${user.firstName} ${user.lastName}`} 

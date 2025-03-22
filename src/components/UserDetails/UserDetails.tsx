@@ -94,7 +94,7 @@ const InfoValue = styled.span`
 
 const Separator = styled.img`
   width: 100%;
-  height: 1px;
+  height: 10px;
   margin: 0 0 24px;
 `;
 
