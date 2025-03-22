@@ -22,4 +22,5 @@ export interface User {
   department: string;
   birthday: string;
   email: string;
+  phone: string;
 }

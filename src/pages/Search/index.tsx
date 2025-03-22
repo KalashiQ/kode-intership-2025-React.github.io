@@ -30,7 +30,20 @@ const Search: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
-  const fetchUsers = async (department: TabType = "all") => {
+  const filterUsers = useCallback((query: string, usersToFilter = users) => {
+    const normalizedQuery = query.toLowerCase();
+    return usersToFilter.filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const email = `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}@gmail.com`;
+      return (
+        fullName.includes(normalizedQuery) ||
+        user.userTag.toLowerCase().includes(normalizedQuery) ||
+        email.includes(normalizedQuery)
+      );
+    });
+  }, [users]);
+
+  const fetchUsers = useCallback(async (department: TabType = "all") => {
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -46,10 +59,7 @@ const Search: React.FC = () => {
 
       const data = await response.json();
       setUsers(data.items);
-      
-      const filtered = filterUsers(searchQuery, data.items);
-      setFilteredUsers(filtered);
-      
+      setFilteredUsers(data.items);
       setError(null);
     } catch (err: unknown) {
       console.error("Ошибка при загрузке пользователей:", err);
@@ -57,7 +67,7 @@ const Search: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const sortUsers = useCallback((usersToSort: User[]) => {
     if (!sortType) return usersToSort;
@@ -70,22 +80,9 @@ const Search: React.FC = () => {
     });
   }, [sortType]);
 
-  const filterUsers = useCallback((query: string, usersToFilter = users) => {
-    const normalizedQuery = query.toLowerCase();
-    return usersToFilter.filter((user) => {
-      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-      const email = `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}@gmail.com`;
-      return (
-        fullName.includes(normalizedQuery) ||
-        user.userTag.toLowerCase().includes(normalizedQuery) ||
-        email.includes(normalizedQuery)
-      );
-    });
-  }, [users]);
-
   useEffect(() => {
     fetchUsers(activeTab);
-  }, [activeTab]);
+  }, [activeTab, fetchUsers]);
 
   useEffect(() => {
     if (!isLoading) {

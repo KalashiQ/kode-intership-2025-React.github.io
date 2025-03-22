@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import styled from "styled-components";
 import { User } from "../../types";
 import { sortUsersByAlphabet, sortUsersByBirthday } from "../../utils/sorting";
+import { useNavigate } from 'react-router-dom';
 
 const ListContainer = styled.div`
   margin-top: -1px;
@@ -99,6 +100,12 @@ interface UserListProps {
 }
 
 const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
+  const navigate = useNavigate();
+  
+  const handleUserClick = (user: User) => {
+    navigate(`/user/${user.id}`, { state: { user } });
+  };
+
   const groupedUsers = useMemo(() => {
     if (!sortType) {
       return { currentYear: users, nextYear: [] };
@@ -132,7 +139,7 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
     return (
       <ListContainer>
         {groupedUsers.currentYear.map((user) => (
-          <UserItem key={user.id}>
+          <UserItem key={user.id} onClick={() => handleUserClick(user)}>
             <Avatar src={user.avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
             <Content>
               <NameContainer>
@@ -150,7 +157,7 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
   return (
     <ListContainer>
       {groupedUsers.currentYear.map((user) => (
-        <UserItem key={user.id}>
+        <UserItem key={user.id} onClick={() => handleUserClick(user)}>
           <Avatar src={user.avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
           <Content>
             <NameContainer>
@@ -167,7 +174,7 @@ const UserList: React.FC<UserListProps> = ({ users, sortType }) => {
             <YearLabel>{new Date().getFullYear() + 1}</YearLabel>
           </YearDivider>
           {groupedUsers.nextYear.map((user) => (
-            <UserItem key={user.id}>
+            <UserItem key={user.id} onClick={() => handleUserClick(user)}>
               <Avatar src={user.avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
               <Content>
                 <NameContainer>
