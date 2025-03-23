@@ -43,7 +43,7 @@ const YearDivider = styled.div`
     top: 50%;
     width: 508px;
     height: 1px;
-    background-color: #C3C3C6;
+    background-color: ${({ theme }) => theme.colors.divider};
     transform: rotate(180deg);
   }
 
@@ -59,7 +59,7 @@ const YearDivider = styled.div`
 `;
 
 const YearLabel = styled.span`
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.background};
   padding: 0 40px;
   color: #97979B;
   font-size: 15px;
@@ -87,19 +87,33 @@ const NameContainer = styled.div`
 `;
 
 const Name = styled.span`
+  font-family: 'Inter';
   font-size: 16px;
   font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0;
+  vertical-align: middle;
   color: ${({ theme }) => theme.colors.text};
 `;
 
 const Tag = styled.span`
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  vertical-align: middle;
   color: ${({ theme }) => theme.colors.secondaryText};
   margin-left: 4px;
 `;
 
 const Department = styled.span`
-  color: ${({ theme }) => theme.colors.tertiaryText};
+  font-family: 'Inter';
+  font-weight: 400;
   font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0;
+  color: ${({ theme }) => theme.colors.tertiaryText};
   margin-top: 6px;
 `;
 

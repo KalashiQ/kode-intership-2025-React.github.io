@@ -110,6 +110,12 @@ const StyledIcon = styled.img`
   filter: ${({ theme }) => theme.colors.text === '#FFFFFF' ? 'brightness(0) invert(1)' : 'none'};
 `;
 
+const GlobalWrapper = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  background: ${({ theme }) => theme.colors.background};
+`;
+
 const UserDetails: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -130,44 +136,46 @@ const UserDetails: React.FC = () => {
 
   return (
     <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
-      <Container>
-        <Header>
-          <BackButton onClick={handleBack}>
-            <StyledIcon src={BackIcon} alt="Back" />
-          </BackButton>
-          <Avatar src={avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
-          <UserName>
-            {user.firstName} {user.lastName}
-            <UserTag> {user.userTag}</UserTag>
-          </UserName>
-          <Department>{user.department}</Department>
-        </Header>
-        
-        <InfoSection>
-          <InfoRow>
-            <InfoLabel>
-              <StyledIcon src={FavoriteIcon} alt="Birthday" />
-              {formatBirthday(user.birthday)}
-            </InfoLabel>
-            <InfoValue>
-              {calculateAge(user.birthday)} {getAgeWord(calculateAge(user.birthday))}
-            </InfoValue>
-          </InfoRow>
+      <GlobalWrapper>
+        <Container>
+          <Header>
+            <BackButton onClick={handleBack}>
+              <StyledIcon src={BackIcon} alt="Back" />
+            </BackButton>
+            <Avatar src={avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
+            <UserName>
+              {user.firstName} {user.lastName}
+              <UserTag> {user.userTag}</UserTag>
+            </UserName>
+            <Department>{user.department}</Department>
+          </Header>
           
-          <StyledIcon 
-            src={SeparatorIcon} 
-            alt="" 
-            style={{ width: '100%', height: '10px', margin: '0 0 12px' }} 
-          />
-          
-          <InfoRow>
-            <PhoneLink href={`tel:${user.phone}`}>
-              <StyledIcon src={PhoneIcon} alt="Phone" />
-              {formatPhoneNumber(user.phone)}
-            </PhoneLink>
-          </InfoRow>
-        </InfoSection>
-      </Container>
+          <InfoSection>
+            <InfoRow>
+              <InfoLabel>
+                <StyledIcon src={FavoriteIcon} alt="Birthday" />
+                {formatBirthday(user.birthday)}
+              </InfoLabel>
+              <InfoValue>
+                {calculateAge(user.birthday)} {getAgeWord(calculateAge(user.birthday))}
+              </InfoValue>
+            </InfoRow>
+            
+            <StyledIcon 
+              src={SeparatorIcon} 
+              alt="" 
+              style={{ width: '100%', height: '10px', margin: '0 0 12px' }} 
+            />
+            
+            <InfoRow>
+              <PhoneLink href={`tel:${user.phone}`}>
+                <StyledIcon src={PhoneIcon} alt="Phone" />
+                {formatPhoneNumber(user.phone)}
+              </PhoneLink>
+            </InfoRow>
+          </InfoSection>
+        </Container>
+      </GlobalWrapper>
     </ThemeProvider>
   );
 };

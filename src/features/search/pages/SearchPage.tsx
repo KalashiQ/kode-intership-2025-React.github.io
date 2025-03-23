@@ -26,6 +26,12 @@ const SearchContainer = styled.div`
   color: ${({ theme }) => theme.colors.text};
 `;
 
+const GlobalWrapper = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  background: ${({ theme }) => theme.colors.background};
+`;
+
 const ContentWrapper = styled.div`
   padding: 8px 16px 0;
   flex: 1;
@@ -84,43 +90,45 @@ const Search: React.FC = () => {
 
   return (
     <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
-      <SearchContainer>
-        <ContentWrapper>
-          <HeaderSection>
-            <HeaderContent>
-              {showNetworkStatus ? (
-                <NetworkStatus isOnline={isOnline} isLoading={isLoading} />
-              ) : (
-                <>
-                  <SearchHeader isDark={isDarkTheme} toggleTheme={toggleTheme} />
-                  <SearchInput
-                    isLoading={isLoading}
-                    sortType={sortType}
-                    onSortChange={handleSortChange}
-                    searchQuery={searchQuery}
-                    onSearchChange={handleSearchChange}
-                    isDarkTheme={isDarkTheme}
-                  />
-                </>
-              )}
-            </HeaderContent>
-          </HeaderSection>
-          <TabBar activeTab={activeTab} onTabChange={handleTabChange} />
-          {(isLoading && !showNetworkStatus) ? (
-            <UserListSkeleton hasNetworkStatus={showNetworkStatus} />
-          ) : error ? (
-            <UserListError onRetry={() => fetchUsers(activeTab)} />
-          ) : filteredUsers.length === 0 && searchQuery ? (
-            <EmptySearchResult />
-          ) : (
-            <UserList 
-              users={filteredUsers} 
-              sortType={sortType} 
-              hasNetworkStatus={showNetworkStatus}
-            />
-          )}
-        </ContentWrapper>
-      </SearchContainer>
+      <GlobalWrapper>
+        <SearchContainer>
+          <ContentWrapper>
+            <HeaderSection>
+              <HeaderContent>
+                {showNetworkStatus ? (
+                  <NetworkStatus isOnline={isOnline} isLoading={isLoading} />
+                ) : (
+                  <>
+                    <SearchHeader isDark={isDarkTheme} toggleTheme={toggleTheme} />
+                    <SearchInput
+                      isLoading={isLoading}
+                      sortType={sortType}
+                      onSortChange={handleSortChange}
+                      searchQuery={searchQuery}
+                      onSearchChange={handleSearchChange}
+                      isDarkTheme={isDarkTheme}
+                    />
+                  </>
+                )}
+              </HeaderContent>
+            </HeaderSection>
+            <TabBar activeTab={activeTab} onTabChange={handleTabChange} />
+            {(isLoading && !showNetworkStatus) ? (
+              <UserListSkeleton hasNetworkStatus={showNetworkStatus} />
+            ) : error ? (
+              <UserListError onRetry={() => fetchUsers(activeTab)} />
+            ) : filteredUsers.length === 0 && searchQuery ? (
+              <EmptySearchResult />
+            ) : (
+              <UserList 
+                users={filteredUsers} 
+                sortType={sortType} 
+                hasNetworkStatus={showNetworkStatus}
+              />
+            )}
+          </ContentWrapper>
+        </SearchContainer>
+      </GlobalWrapper>
     </ThemeProvider>
   );
 };
