@@ -45,6 +45,8 @@ const HeaderContent = styled.div`
   bottom: 0;
 `;
 
+const CACHE_DURATION = 5 * 60 * 1000;
+
 const Search: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>(() => {
     return localStorage.getItem('activeTab') as TabType || 'all'
@@ -65,6 +67,21 @@ const Search: React.FC = () => {
     return localStorage.getItem('theme') === 'dark';
   });
 
+  const [cache, setCache] = useState<{
+    [key in TabType]?: {
+      data: User[];
+      timestamp: number;
+    };
+  }>({});
+
+  const isCacheValid = useCallback((department: TabType) => {
+    const cachedData = cache[department];
+    if (!cachedData) return false;
+    
+    const now = Date.now();
+    return now - cachedData.timestamp < CACHE_DURATION;
+  }, [cache]);
+
   const filterUsers = useCallback((text: string, usersToFilter = users) => {
     const normalizedQuery = text.toLowerCase();
     return usersToFilter.filter((user) => {
@@ -79,10 +96,20 @@ const Search: React.FC = () => {
   }, [users]);
 
   const fetchUsers = useCallback(async (department: TabType = "all") => {
+    if (isCacheValid(department)) {
+      const cachedData = cache[department];
+      setUsers(cachedData!.data);
+      setFilteredUsers(cachedData!.data);
+      setError(null);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `https://stoplight.io/mocks/kode-frontend-team/koder-stoplight/86566464/users`, {
+        `https://stoplight.io/mocks/kode-frontend-team/koder-stoplight/86566464/users`,
+        {
           params: {
             __example: department
           },
@@ -92,8 +119,16 @@ const Search: React.FC = () => {
         }
       );
 
-      setUsers(response.data.items);
-      setFilteredUsers(response.data.items);
+      const newData = response.data.items;
+      setUsers(newData);
+      setFilteredUsers(newData);
+      setCache(prevCache => ({
+        ...prevCache,
+        [department]: {
+          data: newData,
+          timestamp: Date.now()
+        }
+      }));
       setError(null);
     } catch (err) {
       console.error("Ошибка при загрузке пользователей:", err);
@@ -101,7 +136,7 @@ const Search: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [cache, isCacheValid]);
 
   const sortUsers = useCallback((usersToSort: User[]) => {
     if (!sortType) return usersToSort;
@@ -161,6 +196,7 @@ const Search: React.FC = () => {
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
     localStorage.setItem('activeTab', tab);
+    fetchUsers(tab);
   };
 
   const handleSearchChange = (query: string) => {
