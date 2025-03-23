@@ -36,9 +36,9 @@ const Tab = styled.button<{ active: boolean }>`
   height: 36px;
   border: none;
   background: transparent;
-  color: ${(props) => (props.active ? "#050510" : "#97979B")};
+  color: ${(props) => (props.active ? props.theme.colors.text : props.theme.colors.secondaryText)};
   border-bottom: 2px solid
-    ${(props) => (props.active ? "#6534FF" : "transparent")};
+    ${(props) => (props.active ? props.theme.colors.primary : "transparent")};
   cursor: pointer;
   white-space: nowrap;
   position: relative;

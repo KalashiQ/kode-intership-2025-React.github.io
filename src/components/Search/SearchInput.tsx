@@ -15,7 +15,7 @@ const SearchWrapper = styled.div<SearchWrapperProps>`
   margin: 6px 0 0 0;
   padding: 8px 12px;
   border-radius: 16px;
-  background: #f5f5f5;
+  background: ${({ theme }) => theme.colors.searchBackground};
 `;
 
 const Input = styled.input`
@@ -27,13 +27,13 @@ const Input = styled.input`
   font-weight: 500;
   font-size: 15px;
   line-height: 20px;
-  color: #050510;
+  color: ${({ theme }) => theme.colors.text};
   vertical-align: middle;
   caret-color: #6534FF;
   caret-width: 2px;
 
   &::placeholder {
-    color: #9e9e9e;
+    color: ${({ theme }) => theme.colors.secondaryText};
   }
 
   &:focus {

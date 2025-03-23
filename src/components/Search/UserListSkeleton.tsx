@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import ellipse from "../../assets/Ellipse 9.png";
-import rectLong from "../../assets/Rectangle 194.png";
-import rectShort from "../../assets/Rectangle 193.png";
+import ellipse from "../../assets/Ellipse 9.svg";
+import rectLong from "../../assets/Rectangle 194.svg";
+import rectShort from "../../assets/Rectangle 193.svg";
 
 const SkeletonItem = styled.div<{ isFirst?: boolean }>`
   display: flex;

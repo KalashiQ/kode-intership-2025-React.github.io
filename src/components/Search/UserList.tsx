@@ -28,7 +28,7 @@ const UserItem = styled.div<{ isFirst?: boolean }>`
   margin-top: ${props => props.isFirst ? '16px' : '0'};
 
   &:hover {
-    background-color: #F7F7F8;
+    background-color: ${({ theme }) => theme.colors.hoverBackground};
   }
 `;
 
@@ -89,15 +89,16 @@ const NameContainer = styled.div`
 const Name = styled.span`
   font-size: 16px;
   font-weight: 500;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const Tag = styled.span`
-  color: #97979b;
+  color: ${({ theme }) => theme.colors.secondaryText};
   margin-left: 4px;
 `;
 
 const Department = styled.span`
-  color: #55555c;
+  color: ${({ theme }) => theme.colors.tertiaryText};
   font-size: 13px;
   margin-top: 6px;
 `;

@@ -10,6 +10,8 @@ import UserList from "../../components/Search/UserList.tsx";
 import UserListError from "../../components/Search/UserListError";
 import EmptySearchResult from "../../components/Search/EmptySearchResult";
 import NetworkStatus from "../../components/Search/NetworkStatus";
+import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from '../../theme/theme';
 
 const SearchContainer = styled.div`
   max-width: 1280px;
@@ -18,6 +20,8 @@ const SearchContainer = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const ContentWrapper = styled.div`
@@ -57,6 +61,9 @@ const Search: React.FC = () => {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [wasOffline, setWasOffline] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(() => {
+    return localStorage.getItem('theme') === 'dark';
+  });
 
   const filterUsers = useCallback((text: string, usersToFilter = users) => {
     const normalizedQuery = text.toLowerCase();
@@ -169,43 +176,51 @@ const Search: React.FC = () => {
     }
   }, [isLoading]);
 
+  const toggleTheme = () => {
+    const newTheme = !isDarkTheme;
+    setIsDarkTheme(newTheme);
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+  };
+
   return (
-    <SearchContainer>
-      <ContentWrapper>
-        <HeaderSection>
-          <HeaderContent>
-            {showNetworkStatus ? (
-              <NetworkStatus isOnline={isOnline} isLoading={isLoading && wasOffline} />
-            ) : (
-              <>
-                <SearchHeader />
-                <SearchInput
-                  isLoading={isLoading}
-                  sortType={sortType}
-                  onSortChange={handleSortChange}
-                  searchQuery={searchQuery}
-                  onSearchChange={handleSearchChange}
-                />
-              </>
-            )}
-          </HeaderContent>
-        </HeaderSection>
-        <TabBar activeTab={activeTab} onTabChange={handleTabChange} />
-        {(isLoading && !wasOffline) ? (
-          <UserListSkeleton hasNetworkStatus={showNetworkStatus} />
-        ) : error ? (
-          <UserListError onRetry={() => fetchUsers(activeTab)} />
-        ) : filteredUsers.length === 0 ? (
-          <EmptySearchResult />
-        ) : (
-          <UserList 
-            users={filteredUsers} 
-            sortType={sortType} 
-            hasNetworkStatus={showNetworkStatus}
-          />
-        )}
-      </ContentWrapper>
-    </SearchContainer>
+    <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
+      <SearchContainer>
+        <ContentWrapper>
+          <HeaderSection>
+            <HeaderContent>
+              {showNetworkStatus ? (
+                <NetworkStatus isOnline={isOnline} isLoading={isLoading && wasOffline} />
+              ) : (
+                <>
+                  <SearchHeader isDark={isDarkTheme} toggleTheme={toggleTheme} />
+                  <SearchInput
+                    isLoading={isLoading}
+                    sortType={sortType}
+                    onSortChange={handleSortChange}
+                    searchQuery={searchQuery}
+                    onSearchChange={handleSearchChange}
+                  />
+                </>
+              )}
+            </HeaderContent>
+          </HeaderSection>
+          <TabBar activeTab={activeTab} onTabChange={handleTabChange} />
+          {(isLoading && !wasOffline) ? (
+            <UserListSkeleton hasNetworkStatus={showNetworkStatus} />
+          ) : error ? (
+            <UserListError onRetry={() => fetchUsers(activeTab)} />
+          ) : filteredUsers.length === 0 ? (
+            <EmptySearchResult />
+          ) : (
+            <UserList 
+              users={filteredUsers} 
+              sortType={sortType} 
+              hasNetworkStatus={showNetworkStatus}
+            />
+          )}
+        </ContentWrapper>
+      </SearchContainer>
+    </ThemeProvider>
   );
 };
 
