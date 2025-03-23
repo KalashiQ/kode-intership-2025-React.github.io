@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useLanguage } from '../../context/LanguageContext';
 
 const StatusContainer = styled.div<{ $isError?: boolean }>`
   background: ${props => props.$isError ? "#F44336" : "#6534FF"};
@@ -37,15 +38,17 @@ interface NetworkStatusProps {
 }
 
 const NetworkStatus: React.FC<NetworkStatusProps> = ({ isOnline, isLoading }) => {
+  const { t } = useLanguage();
+  
   if (isOnline && !isLoading) return null;
 
   return (
     <StatusContainer $isError={!isOnline}>
-      <Title>Поиск</Title>
+      <Title>{t('search.title')}</Title>
       <Message>
         {!isOnline 
-          ? "Не могу обновить данные. Проверь соединение с интернетом."
-          : "Секундочку, гружусь..."
+          ? t('search.network.offline')
+          : t('search.network.loading')
         }
       </Message>
     </StatusContainer>

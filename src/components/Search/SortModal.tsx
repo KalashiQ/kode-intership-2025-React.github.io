@@ -3,6 +3,7 @@ import styled from "styled-components";
 import closeIcon from "../../assets/close.svg";
 import selectedIcon from "../../assets/Selected.svg";
 import unselectedIcon from "../../assets/Unselected.svg";
+import { useLanguage } from '../../context/LanguageContext';
 
 const Overlay = styled.div`
   position: fixed;
@@ -92,13 +93,15 @@ const SortModal: React.FC<SortModalProps> = ({
   sortType,
   onSortChange,
 }) => {
+  const { t } = useLanguage();
+
   if (!isOpen) return null;
 
   return (
     <Overlay onClick={onClose}>
       <Modal onClick={(e) => e.stopPropagation()}>
         <Header>
-          <Title>Сортировка</Title>
+          <Title>{t('search.sort.title')}</Title>
           <CloseButton onClick={onClose}>
             <img src={closeIcon} alt="Close" />
           </CloseButton>
@@ -118,7 +121,7 @@ const SortModal: React.FC<SortModalProps> = ({
               src={sortType === "alphabet" ? selectedIcon : unselectedIcon}
               alt="radio"
             />
-            <OptionText>По алфавиту</OptionText>
+            <OptionText>{t('search.sort.alphabet')}</OptionText>
           </SortOption>
           <SortOption>
             <HiddenRadio
@@ -134,7 +137,7 @@ const SortModal: React.FC<SortModalProps> = ({
               src={sortType === "birthday" ? selectedIcon : unselectedIcon}
               alt="radio"
             />
-            <OptionText>По дню рождения</OptionText>
+            <OptionText>{t('search.sort.birthday')}</OptionText>
           </SortOption>
         </div>
       </Modal>

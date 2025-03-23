@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { SearchIcon, SortIcon } from "../../components/Icons";
 import SortModal from "./SortModal";
+import { useLanguage } from '../../context/LanguageContext';
 
 interface SearchWrapperProps {
   $isLoading: boolean;
@@ -66,6 +67,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onSearchChange,
 }) => {
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const { t } = useLanguage();
 
   const handleInputFocus = () => {
     onSearchChange("");
@@ -76,7 +78,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       <SearchWrapper $isLoading={isLoading}>
         <SearchIcon />
         <Input
-          placeholder="Введи имя, тег, почту..."
+          placeholder={t('search.placeholder')}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           onFocus={handleInputFocus}

@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { loadImageWithTimeout, generateFallbackAvatar } from "../../utils/avatarUtils";
 import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from '../../theme/theme';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Container = styled.div`
   height: 100vh;
@@ -109,16 +110,6 @@ const StyledIcon = styled.img`
   filter: ${({ theme }) => theme.colors.text === '#FFFFFF' ? 'brightness(0) invert(1)' : 'none'};
 `;
 
-const getAgeWord = (age: number): string => {
-  const lastDigit = age % 10;
-  const lastTwoDigits = age % 100;
-
-  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return 'лет';
-  if (lastDigit === 1) return 'год';
-  if (lastDigit >= 2 && lastDigit <= 4) return 'года';
-  return 'лет';
-};
-
 const UserDetails: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -128,6 +119,7 @@ const UserDetails: React.FC = () => {
   const [isDarkTheme] = useState(() => {
     return localStorage.getItem('theme') === 'dark';
   });
+  const { t, language } = useLanguage();
 
   const handleBack = () => {
     navigate(-1);
@@ -180,8 +172,18 @@ const UserDetails: React.FC = () => {
     return age;
   };
 
+  const getAgeWord = (age: number): string => {
+    const lastDigit = age % 10;
+    const lastTwoDigits = age % 100;
+
+    if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return t('userDetails.age.years');
+    if (lastDigit === 1) return t('userDetails.age.year');
+    if (lastDigit >= 2 && lastDigit <= 4) return t('userDetails.age.years2_4');
+    return t('userDetails.age.years');
+  };
+
   const formatBirthday = (birthday: string) => {
-    return new Date(birthday).toLocaleDateString('ru-RU', {
+    return new Date(birthday).toLocaleDateString(language === 'ru' ? 'ru-RU' : 'en-US', {
       day: 'numeric',
       month: 'long',
       year: 'numeric'

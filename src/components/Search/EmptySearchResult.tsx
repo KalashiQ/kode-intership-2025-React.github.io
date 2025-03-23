@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import loopIcon from "../../assets/loop.svg";
+import { useLanguage } from '../../context/LanguageContext';
 
 const Container = styled.div`
   display: flex;
@@ -37,11 +38,13 @@ const Subtitle = styled.p`
 `;
 
 const EmptySearchResult: React.FC = () => {
+  const { t } = useLanguage();
+  
   return (
     <Container>
-      <Image src={loopIcon} alt="Поиск" />
-      <Title>Мы никого не нашли</Title>
-      <Subtitle>Попробуй скорректировать запрос</Subtitle>
+      <Image src={loopIcon} alt={t('search.empty.title')} />
+      <Title>{t('search.empty.title')}</Title>
+      <Subtitle>{t('search.empty.subtitle')}</Subtitle>
     </Container>
   );
 };

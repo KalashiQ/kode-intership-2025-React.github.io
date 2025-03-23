@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { TabType } from "../../types";
+import { useLanguage } from '../../context/LanguageContext';
 
 const TabsContainer = styled.div`
   display: flex;
@@ -62,20 +63,22 @@ interface TabBarProps {
 }
 
 const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange }) => {
+  const { t } = useLanguage();
+  
   const tabs: { id: TabType; label: string; apiValue: string }[] = [
-    { id: "all", label: "Все", apiValue: "all" },
-    { id: "design", label: "Дизайн", apiValue: "design" },
-    { id: "analytics", label: "Аналитика", apiValue: "analytics" },
-    { id: "management", label: "Менеджмент", apiValue: "management" },
-    { id: "ios", label: "iOS", apiValue: "ios" },
-    { id: "android", label: "Android", apiValue: "android" },
-    { id: "frontend", label: "Frontend", apiValue: "frontend" },
-    { id: "backend", label: "Backend", apiValue: "backend" },
-    { id: "support", label: "Техподдержка", apiValue: "support" },
-    { id: "qa", label: "QA", apiValue: "qa" },
-    { id: "back_office", label: "Бэк-офис", apiValue: "back_office" },
-    { id: "hr", label: "HR", apiValue: "hr" },
-    { id: "pr", label: "PR", apiValue: "pr" },
+    { id: "all", label: t('search.departments.all'), apiValue: "all" },
+    { id: "design", label: t('search.departments.design'), apiValue: "design" },
+    { id: "analytics", label: t('search.departments.analytics'), apiValue: "analytics" },
+    { id: "management", label: t('search.departments.management'), apiValue: "management" },
+    { id: "ios", label: t('search.departments.ios'), apiValue: "ios" },
+    { id: "android", label: t('search.departments.android'), apiValue: "android" },
+    { id: "frontend", label: t('search.departments.frontend'), apiValue: "frontend" },
+    { id: "backend", label: t('search.departments.backend'), apiValue: "backend" },
+    { id: "support", label: t('search.departments.support'), apiValue: "support" },
+    { id: "qa", label: t('search.departments.qa'), apiValue: "qa" },
+    { id: "back_office", label: t('search.departments.back_office'), apiValue: "back_office" },
+    { id: "hr", label: t('search.departments.hr'), apiValue: "hr" },
+    { id: "pr", label: t('search.departments.pr'), apiValue: "pr" },
   ];
 
   return (

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import flyingSaucer from "../../assets/flying-saucer_1f6f8.svg";
+import { useLanguage } from '../../context/LanguageContext';
 
 const ErrorContainer = styled.div`
   display: flex;
@@ -56,12 +57,14 @@ interface UserListErrorProps {
 }
 
 const UserListError: React.FC<UserListErrorProps> = ({ onRetry }) => {
+  const { t } = useLanguage();
+  
   return (
     <ErrorContainer>
       <ErrorImage src={flyingSaucer} alt="Error" />
-      <ErrorTitle>Какой-то сверхразум все сломал</ErrorTitle>
-      <ErrorSubtitle>Постараемся быстро починить</ErrorSubtitle>
-      <RetryButton onClick={onRetry}>Попробовать снова</RetryButton>
+      <ErrorTitle>{t('search.error.title')}</ErrorTitle>
+      <ErrorSubtitle>{t('search.error.subtitle')}</ErrorSubtitle>
+      <RetryButton onClick={onRetry}>{t('search.error.retry')}</RetryButton>
     </ErrorContainer>
   );
 };

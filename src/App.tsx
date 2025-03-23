@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Search from './pages/Search';
 import styled, { createGlobalStyle } from 'styled-components';
 import UserDetails from './pages/Search/UserDetails';
+import { LanguageProvider } from './context/LanguageProvider';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -30,18 +31,20 @@ const AppWrapper = styled.div`
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <GlobalStyle />
-      <AppWrapper>
-        <Routes>
-          <Route path="/" element={<Search />} />
-          <Route 
-            path="/user/:id" 
-            element={<UserDetails />} 
-          />
-        </Routes>
-      </AppWrapper>
-    </BrowserRouter>
+    <LanguageProvider>
+      <BrowserRouter>
+        <GlobalStyle />
+        <AppWrapper>
+          <Routes>
+            <Route path="/" element={<Search />} />
+            <Route 
+              path="/user/:id" 
+              element={<UserDetails />} 
+            />
+          </Routes>
+        </AppWrapper>
+      </BrowserRouter>
+    </LanguageProvider>
   );
 };
 

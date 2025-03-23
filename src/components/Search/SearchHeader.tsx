@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import ThemeToggle from './ThemeToggle';
+import LanguageToggle from './LanguageToggle';
+import { useLanguage } from '../../context/LanguageContext';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -17,16 +19,26 @@ const Title = styled.h1`
   font-weight: 700;
 `;
 
+const Controls = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
 interface SearchHeaderProps {
   isDark: boolean;
   toggleTheme: () => void;
 }
 
 const SearchHeader: React.FC<SearchHeaderProps> = ({ isDark, toggleTheme }) => {
+  const { t } = useLanguage();
+
   return (
     <HeaderContainer>
-      <Title>Поиск</Title>
-      <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
+      <Title>{t('search.title')}</Title>
+      <Controls>
+        <LanguageToggle />
+        <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
+      </Controls>
     </HeaderContainer>
   );
 };
