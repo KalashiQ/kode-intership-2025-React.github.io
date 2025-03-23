@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import closeIcon from "../../../../assets/close.svg";
+import closeIconDark from "../../../../assets/close-dark.svg";
 import selectedIcon from "../../../../assets/Selected.svg";
 import unselectedIcon from "../../../../assets/Unselected.svg";
 import { useLanguage } from '../../context/LanguageContext';
@@ -21,7 +22,7 @@ const Overlay = styled.div`
 const Modal = styled.div`
   position: relative;
   width: 373px;
-  background: white;
+  background: ${({ theme }) => theme.colors.background};
   border-radius: 20px;
   padding: 24px 16px 8px;
 `;
@@ -39,7 +40,7 @@ const Title = styled.h2`
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
-  color: #050510;
+  color: ${({ theme }) => theme.colors.text};
   margin: 0;
 `;
 
@@ -77,7 +78,7 @@ const OptionText = styled.span`
   font-weight: 500;
   font-size: 16px;
   line-height: 20px;
-  color: #050510;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 interface SortModalProps {
@@ -85,6 +86,7 @@ interface SortModalProps {
   onClose: () => void;
   sortType: "alphabet" | "birthday" | null;
   onSortChange: (type: "alphabet" | "birthday" | null) => void;
+  isDarkTheme?: boolean;
 }
 
 const SortModal: React.FC<SortModalProps> = ({
@@ -92,6 +94,7 @@ const SortModal: React.FC<SortModalProps> = ({
   onClose,
   sortType,
   onSortChange,
+  isDarkTheme
 }) => {
   const { t } = useLanguage();
 
@@ -103,7 +106,7 @@ const SortModal: React.FC<SortModalProps> = ({
         <Header>
           <Title>{t('search.sort.title')}</Title>
           <CloseButton onClick={onClose}>
-            <img src={closeIcon} alt="Close" />
+            <img src={isDarkTheme ? closeIconDark : closeIcon} alt="Close" />
           </CloseButton>
         </Header>
         <div>

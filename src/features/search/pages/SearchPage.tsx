@@ -99,6 +99,7 @@ const Search: React.FC = () => {
                     onSortChange={handleSortChange}
                     searchQuery={searchQuery}
                     onSearchChange={handleSearchChange}
+                    isDarkTheme={isDarkTheme}
                   />
                 </>
               )}

@@ -53,10 +53,11 @@ const SortButton = styled.button`
 
 interface SearchInputProps {
   isLoading: boolean;
-  onSortChange: (type: "alphabet" | "birthday" | null) => void;
   sortType: "alphabet" | "birthday" | null;
+  onSortChange: (type: "alphabet" | "birthday" | null) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  isDarkTheme?: boolean;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
@@ -65,6 +66,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   sortType,
   searchQuery,
   onSearchChange,
+  isDarkTheme
 }) => {
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const { t } = useLanguage();
@@ -92,6 +94,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
         onClose={() => setIsSortModalOpen(false)}
         sortType={sortType}
         onSortChange={onSortChange}
+        isDarkTheme={isDarkTheme}
       />
     </>
   );
