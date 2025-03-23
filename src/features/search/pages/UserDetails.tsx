@@ -1,15 +1,15 @@
 import styled from 'styled-components';
-import { User } from '../../types';
-import BackIcon from '../../assets/back.svg';
-import FavoriteIcon from '../../assets/favorite.svg';
-import PhoneIcon from '../../assets/phone-alt.svg';
-import SeparatorIcon from '../../assets/separator.svg';
+import { User } from "../../../shared/types/index";
+import BackIcon from '../../../assets/back.svg';
+import FavoriteIcon from '../../../assets/favorite.svg';
+import PhoneIcon from '../../../assets/phone-alt.svg';
+import SeparatorIcon from '../../../assets/separator.svg';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { loadImageWithTimeout, generateFallbackAvatar } from "../../utils/avatarUtils";
+import { useState } from 'react';
+import { useUserAvatar } from '../hooks/useUserAvatar';
+import { useUserFormatting } from '../hooks/useUserFormatting';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme } from '../../theme/theme';
-import { useLanguage } from '../../context/LanguageContext';
+import { lightTheme, darkTheme } from '../../../styles/theme/theme.ts';
 
 const Container = styled.div`
   height: 100vh;
@@ -115,80 +115,18 @@ const UserDetails: React.FC = () => {
   const location = useLocation();
   const user = location.state?.user as User;
   const loadedAvatarUrl = location.state?.loadedAvatarUrl;
-  const [avatarUrl, setAvatarUrl] = useState(loadedAvatarUrl || user?.avatarUrl || '');
-  const [isDarkTheme] = useState(() => {
-    return localStorage.getItem('theme') === 'dark';
-  });
-  const { t, language } = useLanguage();
+  const [isDarkTheme] = useState(() => localStorage.getItem('theme') === 'dark');
+  
+  const avatarUrl = useUserAvatar(user, loadedAvatarUrl);
+  const { formatPhoneNumber, calculateAge, getAgeWord, formatBirthday } = useUserFormatting();
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/');
-      return;
-    }
-
-    if (!loadedAvatarUrl) {
-      const loadAvatar = async () => {
-        try {
-          await loadImageWithTimeout(user.avatarUrl);
-          setAvatarUrl(user.avatarUrl);
-        } catch {
-          const fallbackUrl = generateFallbackAvatar(user.firstName, user.lastName);
-          setAvatarUrl(fallbackUrl);
-        }
-      };
-      loadAvatar();
-    }
-  }, [user, navigate, loadedAvatarUrl]);
-
   if (!user) {
     return null;
   }
-
-  const formatPhoneNumber = (phone: string): string => {
-    const cleaned = phone.replace(/\D/g, '');
-    const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})$/);
-    
-    if (match) {
-      return `+${match[1]} (${match[2]}) ${match[3]} ${match[4]} ${match[5]}`;
-    }
-    return phone;
-  };
-
-  const calculateAge = (birthday: string) => {
-    const birthDate = new Date(birthday);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    
-    return age;
-  };
-
-  const getAgeWord = (age: number): string => {
-    const lastDigit = age % 10;
-    const lastTwoDigits = age % 100;
-
-    if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return t('userDetails.age.years');
-    if (lastDigit === 1) return t('userDetails.age.year');
-    if (lastDigit >= 2 && lastDigit <= 4) return t('userDetails.age.years2_4');
-    return t('userDetails.age.years');
-  };
-
-  const formatBirthday = (birthday: string) => {
-    return new Date(birthday).toLocaleDateString(language === 'ru' ? 'ru-RU' : 'en-US', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  };
 
   return (
     <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
@@ -211,10 +149,16 @@ const UserDetails: React.FC = () => {
               <StyledIcon src={FavoriteIcon} alt="Birthday" />
               {formatBirthday(user.birthday)}
             </InfoLabel>
-            <InfoValue>{calculateAge(user.birthday)} {getAgeWord(calculateAge(user.birthday))}</InfoValue>
+            <InfoValue>
+              {calculateAge(user.birthday)} {getAgeWord(calculateAge(user.birthday))}
+            </InfoValue>
           </InfoRow>
           
-          <StyledIcon src={SeparatorIcon} alt="" style={{ width: '100%', height: '10px', margin: '0 0 12px' }} />
+          <StyledIcon 
+            src={SeparatorIcon} 
+            alt="" 
+            style={{ width: '100%', height: '10px', margin: '0 0 12px' }} 
+          />
           
           <InfoRow>
             <PhoneLink href={`tel:${user.phone}`}>

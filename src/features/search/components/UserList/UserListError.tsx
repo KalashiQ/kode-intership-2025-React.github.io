@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import flyingSaucer from "../../assets/flying-saucer_1f6f8.svg";
+import errorIcon from "../../../../assets/flying-saucer_1f6f8.svg";
 import { useLanguage } from '../../context/LanguageContext';
 
 const ErrorContainer = styled.div`
@@ -61,7 +61,7 @@ const UserListError: React.FC<UserListErrorProps> = ({ onRetry }) => {
   
   return (
     <ErrorContainer>
-      <ErrorImage src={flyingSaucer} alt="Error" />
+      <ErrorImage src={errorIcon} alt="Error" />
       <ErrorTitle>{t('search.error.title')}</ErrorTitle>
       <ErrorSubtitle>{t('search.error.subtitle')}</ErrorSubtitle>
       <RetryButton onClick={onRetry}>{t('search.error.retry')}</RetryButton>

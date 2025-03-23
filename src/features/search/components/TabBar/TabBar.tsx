@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { TabType } from "../../types";
-import { useLanguage } from '../../context/LanguageContext';
+import { TabType } from "../../../../shared/types/types.ts";
+import { useLanguage } from '../../../search/context/LanguageContext.tsx';
 
 const TabsContainer = styled.div`
   display: flex;

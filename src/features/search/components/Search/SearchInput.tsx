@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { SearchIcon, SortIcon } from "../../components/Icons";
-import SortModal from "./SortModal";
+import { SearchIcon, SortIcon } from "../../../../shared/Icons";
+import SortModal from "../SortModal/SortModal";
 import { useLanguage } from '../../context/LanguageContext';
 
 interface SearchWrapperProps {

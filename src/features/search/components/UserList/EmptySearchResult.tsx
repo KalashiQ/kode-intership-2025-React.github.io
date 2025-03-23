@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import loopIcon from "../../assets/loop.svg";
+import loopIcon from '../../../../assets/loop.svg';
 import { useLanguage } from '../../context/LanguageContext';
 
 const Container = styled.div`

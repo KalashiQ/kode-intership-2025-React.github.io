@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import ellipse from "../../assets/Ellipse 9.svg";
-import rectLong from "../../assets/Rectangle 194.svg";
-import rectShort from "../../assets/Rectangle 193.svg";
+import skeletonIcon from "../../../../assets/Ellipse 9.svg";
+import rectLong from "../../../../assets/Rectangle 194.svg";
+import rectShort from "../../../../assets/Rectangle 193.svg";
 
 const SkeletonItem = styled.div<{ isFirst?: boolean }>`
   display: flex;
@@ -57,7 +57,7 @@ const UserListSkeleton: React.FC<UserListSkeletonProps> = ({ hasNetworkStatus = 
     <SkeletonContainer $hasNetworkStatus={hasNetworkStatus}>
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item, index) => (
         <SkeletonItem key={item} isFirst={index === 0}>
-          <Avatar src={ellipse} alt="" />
+          <Avatar src={skeletonIcon} alt="" />
           <Content>
             <NameSkeleton src={rectLong} alt="" />
             <TagSkeleton src={rectShort} alt="" />

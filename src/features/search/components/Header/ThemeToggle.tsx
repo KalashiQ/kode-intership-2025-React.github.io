@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Moon, Sun } from '../Icons';
+import { Moon, Sun } from '../../../../shared/Icons';
 
 const ToggleButton = styled.button`
   background: none;

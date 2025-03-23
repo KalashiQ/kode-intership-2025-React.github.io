@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import closeIcon from "../../assets/close.svg";
-import selectedIcon from "../../assets/Selected.svg";
-import unselectedIcon from "../../assets/Unselected.svg";
+import closeIcon from "../../../../assets/close.svg";
+import selectedIcon from "../../../../assets/Selected.svg";
+import unselectedIcon from "../../../../assets/Unselected.svg";
 import { useLanguage } from '../../context/LanguageContext';
 
 const Overlay = styled.div`

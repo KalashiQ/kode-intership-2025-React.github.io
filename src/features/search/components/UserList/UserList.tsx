@@ -1,9 +1,9 @@
 import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
-import { User } from "../../types";
-import { sortUsersByAlphabet, sortUsersByBirthday } from "../../utils/sorting";
+import { User } from "../../../../shared/types";
+import { sortUsersByAlphabet, sortUsersByBirthday } from "../../../../shared/utils/sorting";
 import { useNavigate } from 'react-router-dom';
-import { loadImageWithTimeout, generateFallbackAvatar } from "../../utils/avatarUtils";
+import { loadImageWithTimeout, generateFallbackAvatar } from "../../../../shared/utils/avatarUtils";
 
 const ListContainer = styled.div<{ $hasNetworkStatus?: boolean }>`
   margin-top: -1px;
