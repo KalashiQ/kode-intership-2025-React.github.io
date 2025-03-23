@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { TabType } from "../../../../shared/types/types.ts";
+import { TabType } from "../../../../shared/types/types";
 import { useLanguage } from '../../../search/context/LanguageContext.tsx';
 
 const TabsContainer = styled.div`
