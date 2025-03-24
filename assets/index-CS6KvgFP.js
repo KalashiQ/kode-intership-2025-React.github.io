@@ -589,4 +589,4 @@ Please change the parent <Route path="${q}"> to <Route path="${q==="/"?"*":`${q}
   background-color: #FFFFFF;
   min-height: 100vh;
   width: 100%;
-`,i6=()=>L.jsx(a6,{children:L.jsxs(Cy,{children:[L.jsx(l6,{}),L.jsx(u6,{children:L.jsxs(ty,{children:[L.jsx(to,{path:"/kode-intership-2025-React.github.io",element:L.jsx(L5,{})}),L.jsx(to,{path:"/kode-intership-2025-React.github.io/user/:id",element:L.jsx(n6,{})})]})})]})});og.createRoot(document.getElementById("root")).render(L.jsx(_.StrictMode,{children:L.jsx(i6,{})}));
+`,i6=()=>L.jsx(a6,{children:L.jsxs(Cy,{basename:"/kode-intership-2025-React.github.io",children:[L.jsx(l6,{}),L.jsx(u6,{children:L.jsxs(ty,{children:[L.jsx(to,{path:"/",element:L.jsx(L5,{})}),L.jsx(to,{path:"/user/:id",element:L.jsx(n6,{})})]})})]})});og.createRoot(document.getElementById("root")).render(L.jsx(_.StrictMode,{children:L.jsx(i6,{})}));
