@@ -32,13 +32,13 @@ const AppWrapper = styled.div`
 const App = () => {
   return (
     <LanguageProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/kode-intership-2025-React.github.io">
         <GlobalStyle />
         <AppWrapper>
           <Routes>
-            <Route path="/kode-intership-2025-React.github.io" element={<Search />} />
+            <Route path="/" element={<Search />} />
             <Route 
-              path="/kode-intership-2025-React.github.io/user/:id" 
+              path="/user/:id" 
               element={<UserDetails />} 
             />
           </Routes>
