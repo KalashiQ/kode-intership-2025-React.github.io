@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Search from './features/search/pages/SearchPage';
 import styled, { createGlobalStyle } from 'styled-components';
 import UserDetails from './features/search/pages/UserDetails';
@@ -32,7 +32,7 @@ const AppWrapper = styled.div`
 const App = () => {
   return (
     <LanguageProvider>
-      <BrowserRouter basename="/kode-intership-2025-React.github.io">
+      <HashRouter>
         <GlobalStyle />
         <AppWrapper>
           <Routes>
@@ -43,7 +43,7 @@ const App = () => {
             />
           </Routes>
         </AppWrapper>
-      </BrowserRouter>
+      </HashRouter>
     </LanguageProvider>
   );
 };
