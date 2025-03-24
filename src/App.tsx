@@ -36,9 +36,9 @@ const App = () => {
         <GlobalStyle />
         <AppWrapper>
           <Routes>
-            <Route path="/" element={<Search />} />
+            <Route path="/kode-intership-2025-React.github.io" element={<Search />} />
             <Route 
-              path="/user/:id" 
+              path="/kode-intership-2025-React.github.io/user/:id" 
               element={<UserDetails />} 
             />
           </Routes>
