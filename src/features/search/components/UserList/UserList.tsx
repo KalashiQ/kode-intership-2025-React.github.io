@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { User } from "../../../../shared/types";
 import { sortUsersByAlphabet, sortUsersByBirthday } from "../../../../shared/utils/sorting";
 import { useNavigate } from 'react-router-dom';
-import { loadImageWithTimeout, generateFallbackAvatar } from "../../../../shared/utils/avatarUtils";
+import { generateFallbackAvatar } from "../../../../shared/utils/avatarUtils";
 
 const ListContainer = styled.div<{ $hasNetworkStatus?: boolean }>`
   margin-top: -1px;
@@ -125,23 +125,23 @@ interface UserListProps {
 
 const UserList: React.FC<UserListProps> = ({ users, sortType, hasNetworkStatus = false }) => {
   const navigate = useNavigate();
-  
+
   const [avatarUsers, setAvatarUsers] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const processUserAvatars = async () => {
       const avatarMap: Record<string, string> = {};
-      
+
       await Promise.all(
         users.map(async (user) => {
           try {
-            await loadImageWithTimeout(user.avatarUrl);
+            avatarMap[user.id] = generateFallbackAvatar(user.firstName, user.lastName);
           } catch {
             avatarMap[user.id] = generateFallbackAvatar(user.firstName, user.lastName);
           }
         })
       );
-      
+
       setAvatarUsers(avatarMap);
     };
 
@@ -149,11 +149,11 @@ const UserList: React.FC<UserListProps> = ({ users, sortType, hasNetworkStatus =
   }, [users]);
 
   const handleUserClick = (user: User) => {
-    navigate(`/user/${user.id}`, { 
-      state: { 
+    navigate(`/user/${user.id}`, {
+      state: {
         user,
-        loadedAvatarUrl: avatarUsers[user.id] || user.avatarUrl 
-      } 
+        loadedAvatarUrl: avatarUsers[user.id] || user.avatarUrl
+      }
     });
   };
 
@@ -161,7 +161,7 @@ const UserList: React.FC<UserListProps> = ({ users, sortType, hasNetworkStatus =
     if (!sortType) {
       return { currentYear: users, nextYear: [] };
     }
-    
+
     if (sortType === "alphabet") {
       return { currentYear: sortUsersByAlphabet(users), nextYear: [] };
     }
@@ -187,14 +187,14 @@ const UserList: React.FC<UserListProps> = ({ users, sortType, hasNetworkStatus =
   }, [users, sortType]);
 
   const renderUserItem = (user: User, index: number) => (
-    <UserItem 
-      key={user.id} 
+    <UserItem
+      key={user.id}
       onClick={() => handleUserClick(user)}
       isFirst={index === 0}
     >
-      <Avatar 
-        src={avatarUsers[user.id] || user.avatarUrl} 
-        alt={`${user.firstName} ${user.lastName}`} 
+      <Avatar
+        src={avatarUsers[user.id] || user.avatarUrl}
+        alt={`${user.firstName} ${user.lastName}`}
       />
       <Content>
         <NameContainer>
